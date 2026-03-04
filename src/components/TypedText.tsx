@@ -1,0 +1,57 @@
+import { useEffect, useRef, useState } from "react";
+
+const PHRASES = ["Programmer", "Prompt Engineer", "Vibe Coder"];
+
+const TypedText = () => {
+    const [displayed, setDisplayed] = useState("");
+    const phraseIndex = useRef(0);
+    const charIndex = useRef(0);
+    const deleting = useRef(false);
+
+    useEffect(() => {
+        let timeout: ReturnType<typeof setTimeout>;
+
+        const tick = () => {
+            const current = PHRASES[phraseIndex.current];
+
+            if (!deleting.current && charIndex.current < current.length) {
+                charIndex.current += 1;
+                setDisplayed(current.slice(0, charIndex.current));
+                timeout = setTimeout(tick, 60);
+            } else if (
+                !deleting.current &&
+                charIndex.current === current.length
+            ) {
+                timeout = setTimeout(() => {
+                    deleting.current = true;
+                    tick();
+                }, 2000);
+            } else if (deleting.current && charIndex.current > 0) {
+                charIndex.current -= 1;
+                setDisplayed(current.slice(0, charIndex.current));
+                timeout = setTimeout(tick, 35);
+            } else if (deleting.current && charIndex.current === 0) {
+                deleting.current = false;
+                phraseIndex.current =
+                    (phraseIndex.current + 1) % PHRASES.length;
+                timeout = setTimeout(tick, 200);
+            }
+        };
+
+        timeout = setTimeout(tick, 100);
+        return () => clearTimeout(timeout);
+    }, []);
+
+    return (
+        <p className="text-xl font-mono mt-2" style={{ color: "#a855f7" }}>
+            {"> "}
+            <span>{displayed}</span>
+            <span
+                className="inline-block w-0.5 h-5 ml-0.5 align-middle animate-pulse"
+                style={{ background: "#a855f7" }}
+            />
+        </p>
+    );
+};
+
+export default TypedText;
