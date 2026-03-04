@@ -14,6 +14,17 @@ interface NavbarProps {
     activeSection?: string;
 }
 
+const scrollToSection = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    sectionId: string,
+) => {
+    e.preventDefault();
+    const el = document.getElementById(sectionId);
+    if (el) {
+        el.scrollIntoView({ behavior: "smooth" });
+    }
+};
+
 const Navbar = ({ activeSection = "home" }: NavbarProps) => {
     return (
         <nav
@@ -37,6 +48,7 @@ const Navbar = ({ activeSection = "home" }: NavbarProps) => {
                         <a
                             key={link.label}
                             href={link.href}
+                            onClick={(e) => scrollToSection(e, link.sectionId)}
                             className={`flex items-center px-10 text-sm font-mono tracking-wider transition-colors duration-200 border-r border-white/10 relative
                                 ${isActive ? "text-white" : "text-gray-400 hover:text-white"}`}
                         >
@@ -55,6 +67,7 @@ const Navbar = ({ activeSection = "home" }: NavbarProps) => {
             {/* Contact — right */}
             <a
                 href="#contact"
+                onClick={(e) => scrollToSection(e, "contact")}
                 className={`flex items-center px-8 text-sm font-mono tracking-wider transition-colors duration-200 border-l border-white/10 ml-auto relative
                     ${activeSection === "contact" ? "text-white" : "text-gray-400 hover:text-white"}`}
             >
