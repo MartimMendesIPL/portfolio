@@ -27,11 +27,11 @@ const Field = ({
     multiline?: boolean;
     disabled?: boolean;
 }) => (
-    <div className="flex flex-col gap-1.5">
+    <div className="flex flex-col gap-2">
         {/* comment-style label */}
         <label
-            className="text-xs font-mono"
-            style={{ color: "rgba(168,85,247,0.7)" }}
+            className="text-sm font-mono"
+            style={{ color: "rgba(192,132,252,0.9)" }}
         >
             {`// ${label}`}
         </label>
@@ -40,20 +40,20 @@ const Field = ({
                 value={value}
                 onChange={(e) => onChange(name, e.target.value)}
                 disabled={disabled}
-                rows={5}
+                rows={6}
                 placeholder="Value"
-                className="w-full resize-none rounded text-xs font-mono text-gray-200 placeholder-gray-600 outline-none transition-colors duration-150 focus:ring-1"
+                className="w-full resize-none rounded text-sm font-mono text-gray-100 placeholder-gray-500 outline-none transition-colors duration-150"
                 style={{
-                    background: "rgba(255,255,255,0.04)",
-                    border: "1px solid rgba(255,255,255,0.1)",
-                    padding: "10px 12px",
+                    background: "rgba(255,255,255,0.06)",
+                    border: "1px solid rgba(255,255,255,0.15)",
+                    padding: "12px 14px",
                 }}
                 onFocus={(e) =>
-                    (e.currentTarget.style.borderColor = "rgba(168,85,247,0.5)")
+                    (e.currentTarget.style.borderColor = "rgba(168,85,247,0.6)")
                 }
                 onBlur={(e) =>
                     (e.currentTarget.style.borderColor =
-                        "rgba(255,255,255,0.1)")
+                        "rgba(255,255,255,0.15)")
                 }
             />
         ) : (
@@ -63,18 +63,18 @@ const Field = ({
                 onChange={(e) => onChange(name, e.target.value)}
                 disabled={disabled}
                 placeholder="Value"
-                className="w-full rounded text-xs font-mono text-gray-200 placeholder-gray-600 outline-none transition-colors duration-150"
+                className="w-full rounded text-sm font-mono text-gray-100 placeholder-gray-500 outline-none transition-colors duration-150"
                 style={{
-                    background: "rgba(255,255,255,0.04)",
-                    border: "1px solid rgba(255,255,255,0.1)",
-                    padding: "10px 12px",
+                    background: "rgba(255,255,255,0.06)",
+                    border: "1px solid rgba(255,255,255,0.15)",
+                    padding: "12px 14px",
                 }}
                 onFocus={(e) =>
-                    (e.currentTarget.style.borderColor = "rgba(168,85,247,0.5)")
+                    (e.currentTarget.style.borderColor = "rgba(168,85,247,0.6)")
                 }
                 onBlur={(e) =>
                     (e.currentTarget.style.borderColor =
-                        "rgba(255,255,255,0.1)")
+                        "rgba(255,255,255,0.15)")
                 }
             />
         )}
@@ -200,24 +200,21 @@ const ContactSection = () => {
                     </div>
 
                     {/* Editor content*/}
-                    <div className="flex flex-1 overflow-hidden">
-                        <div
-                            className="shrink-0 flex justify-center overflow-y-auto pl-10 py-10"
-                            style={{ width: "480px" }}
-                        >
+                    <div className="flex flex-1 overflow-y-auto justify-center items-start">
+                        <div className="w-full max-w-2xl px-14 py-12">
                             {status === "sent" ? (
                                 /* Success state */
-                                <div className="flex flex-col items-center gap-4 text-center px-6">
+                                <div className="flex flex-col items-center gap-5 text-center px-6">
                                     <div
-                                        className="w-12 h-12 rounded-full flex items-center justify-center"
+                                        className="w-16 h-16 rounded-full flex items-center justify-center"
                                         style={{
                                             background: "rgba(168,85,247,0.15)",
                                             border: "1px solid rgba(168,85,247,0.3)",
                                         }}
                                     >
                                         <svg
-                                            width="20"
-                                            height="20"
+                                            width="28"
+                                            height="28"
                                             viewBox="0 0 24 24"
                                             fill="none"
                                             stroke="#a855f7"
@@ -228,15 +225,15 @@ const ContactSection = () => {
                                             <polyline points="20 6 9 17 4 12" />
                                         </svg>
                                     </div>
-                                    <p className="text-sm font-mono text-gray-200">
+                                    <p className="text-base font-mono text-gray-100">
                                         message sent!
                                     </p>
-                                    <p className="text-sm font-mono text-gray-500">
+                                    <p className="text-sm font-mono text-gray-400">
                                         {"// I'll get back to you soon"}
                                     </p>
                                     <button
                                         onClick={() => setStatus("idle")}
-                                        className="mt-2 text-xs font-mono text-purple-400 hover:text-purple-300 transition-colors"
+                                        className="mt-2 text-sm font-mono text-purple-400 hover:text-purple-300 transition-colors"
                                     >
                                         send another →
                                     </button>
@@ -245,11 +242,11 @@ const ContactSection = () => {
                                 /* Form */
                                 <form
                                     onSubmit={handleSubmit}
-                                    className="flex flex-col gap-4 w-full"
+                                    className="flex flex-col gap-5 w-full"
                                 >
                                     {/* Header comment */}
-                                    <div className="mb-1">
-                                        <p className="text-sm font-mono text-gray-600">
+                                    <div className="mb-2">
+                                        <p className="text-base font-mono text-gray-500">
                                             {"/* send_a_message */"}
                                         </p>
                                     </div>
@@ -301,7 +298,7 @@ const ContactSection = () => {
                                             !form.email ||
                                             !form.message
                                         }
-                                        className="w-full py-2.5 text-sm font-mono tracking-widest transition-all duration-200 rounded disabled:opacity-40 disabled:cursor-not-allowed"
+                                        className="w-full py-3 text-sm font-mono tracking-widest transition-all duration-200 rounded disabled:opacity-40 disabled:cursor-not-allowed"
                                         style={{
                                             background: isBusy
                                                 ? "rgba(168,85,247,0.3)"

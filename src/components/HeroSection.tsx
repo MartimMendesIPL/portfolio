@@ -37,7 +37,7 @@ const HeroSection = () => {
             <div className="relative z-[2] max-w-lg text-center">
                 <h1
                     className="text-5xl font-extrabold text-white leading-tight tracking-tight"
-                    style={{ fontFamily: "Inter, sans-serif" }}
+                    style={{ fontFamily: "monospace" }}
                 >
                     Martim Mendes
                 </h1>

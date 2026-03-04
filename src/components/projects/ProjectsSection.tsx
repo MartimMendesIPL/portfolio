@@ -25,78 +25,96 @@ const LANG_COLORS: Record<string, string> = {
     Shell: "#89e051",
 };
 
+const GITHUB_USER = "MartimMendesIPL";
+const EXCLUDED = new Set([GITHUB_USER]);
+
 /* ── Single project card ── */
-const ProjectCard = ({ repo }: { repo: Repo }) => (
-    <div
-        className="flex flex-col rounded-lg overflow-hidden"
-        style={{
-            background: "rgba(255,255,255,0.03)",
-            border: "1px solid rgba(255,255,255,0.08)",
-        }}
-    >
-        {/* Image placeholder */}
+const ProjectCard = ({ repo }: { repo: Repo }) => {
+    const [imgError, setImgError] = useState(false);
+    const ogImage = `https://opengraph.githubassets.com/1/${GITHUB_USER}/${repo.name}`;
+
+    return (
         <div
-            className="shrink-0 flex items-center justify-center"
+            className="flex flex-col rounded-lg overflow-hidden"
             style={{
-                height: "170px",
-                background: "rgba(255,255,255,0.04)",
-                borderBottom: "1px solid rgba(255,255,255,0.06)",
+                background: "rgba(255,255,255,0.03)",
+                border: "1px solid rgba(255,255,255,0.08)",
             }}
         >
-            <svg
-                width="32"
-                height="32"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="rgba(255,255,255,0.1)"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
+            {/* Preview image */}
+            <div
+                className="shrink-0 overflow-hidden flex items-center justify-center"
+                style={{
+                    height: "170px",
+                    background: "rgba(255,255,255,0.04)",
+                    borderBottom: "1px solid rgba(255,255,255,0.06)",
+                }}
             >
-                <rect x="3" y="3" width="18" height="18" rx="2" />
-                <circle cx="8.5" cy="8.5" r="1.5" />
-                <polyline points="21 15 16 10 5 21" />
-            </svg>
-        </div>
-
-        {/* Body */}
-        <div className="flex flex-col flex-1 p-4 gap-3">
-            {/* Repo name */}
-            <p className="text-sm font-mono text-gray-400">{repo.name}</p>
-
-            {/* Description */}
-            <p className="text-sm font-mono text-gray-300 leading-5 flex-1">
-                {repo.description ?? "No description provided."}
-            </p>
-
-            {/* Language tag */}
-            {repo.language && (
-                <div className="flex items-center gap-1.5">
-                    <span
-                        className="w-2 h-2 rounded-full shrink-0"
-                        style={{
-                            background: LANG_COLORS[repo.language] ?? "#888",
-                        }}
+                {imgError ? (
+                    <svg
+                        width="32"
+                        height="32"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="rgba(255,255,255,0.1)"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                    >
+                        <rect x="3" y="3" width="18" height="18" rx="2" />
+                        <circle cx="8.5" cy="8.5" r="1.5" />
+                        <polyline points="21 15 16 10 5 21" />
+                    </svg>
+                ) : (
+                    <img
+                        src={ogImage}
+                        alt={repo.name}
+                        onError={() => setImgError(true)}
+                        className="w-full h-full object-cover"
                     />
-                    <span className="text-sm font-mono text-gray-500">
-                        {repo.language}
-                    </span>
-                </div>
-            )}
+                )}
+            </div>
 
-            {/* GitHub button */}
-            <a
-                href={repo.html_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-auto text-center text-sm font-mono text-gray-300 hover:text-white transition-colors duration-150 py-1.5 rounded"
-                style={{ border: "1px solid rgba(255,255,255,0.12)" }}
-            >
-                view project on github
-            </a>
+            {/* Body */}
+            <div className="flex flex-col flex-1 p-4 gap-3">
+                {/* Repo name */}
+                <p className="text-sm font-mono text-gray-400">{repo.name}</p>
+
+                {/* Description */}
+                <p className="text-sm font-mono text-gray-300 leading-5 flex-1">
+                    {repo.description ?? "No description provided."}
+                </p>
+
+                {/* Language tag */}
+                {repo.language && (
+                    <div className="flex items-center gap-1.5">
+                        <span
+                            className="w-2 h-2 rounded-full shrink-0"
+                            style={{
+                                background:
+                                    LANG_COLORS[repo.language] ?? "#888",
+                            }}
+                        />
+                        <span className="text-sm font-mono text-gray-500">
+                            {repo.language}
+                        </span>
+                    </div>
+                )}
+
+                {/* GitHub button */}
+                <a
+                    href={repo.html_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-auto text-center text-sm font-mono text-gray-300 hover:text-white transition-colors duration-150 py-1.5 rounded"
+                    style={{ border: "1px solid rgba(255,255,255,0.12)" }}
+                >
+                    view project on github
+                </a>
+            </div>
         </div>
-    </div>
-);
+    );
+};
 
 /* ── Loading skeleton ── */
 const Skeleton = () => (
@@ -120,12 +138,9 @@ const Skeleton = () => (
 );
 
 /* ── Main section ── */
-const GITHUB_USER = "MartimMendesIPL";
-const EXCLUDED = new Set([GITHUB_USER]);
-
 const ProjectsSection = () => {
     const [repos, setRepos] = useState<Repo[]>([]);
-    const [selected, setSelected] = useState<string>("highlighted_projects");
+    const [selected, setSelected] = useState<string>("all_projects");
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
 
@@ -139,7 +154,7 @@ const ProjectsSection = () => {
                     .filter((r) => !r.fork && !EXCLUDED.has(r.name))
                     .slice(0, 12);
                 setRepos(filtered);
-                if (filtered.length > 0) setSelected(filtered[0].name);
+                setSelected("all_projects");
             })
             .catch(() => setError(true))
             .finally(() => setLoading(false));
@@ -150,9 +165,9 @@ const ProjectsSection = () => {
         ? []
         : repos.map((r) => ({ id: r.name, label: r.name }));
 
-    /* Cards to show — highlighted = all, or single repo */
+    /* Cards to show — all_projects = all, or single repo */
     const displayRepos =
-        selected === "highlighted_projects"
+        selected === "all_projects"
             ? repos
             : repos.filter((r) => r.name === selected);
 
@@ -199,14 +214,14 @@ const ProjectsSection = () => {
                             <span>projects</span>
                         </div>
 
-                        {/* "highlighted_projects" entry */}
+                        {/* "all_projects" entry */}
                         <div
-                            className={`flex items-center gap-1.5 py-0.5 cursor-pointer select-none text-xs font-mono transition-colors duration-100 ${selected === "highlighted_projects" ? "text-white bg-white/10" : "text-gray-400 hover:text-gray-200 hover:bg-white/5"}`}
+                            className={`flex items-center gap-1.5 py-0.5 cursor-pointer select-none text-xs font-mono transition-colors duration-100 ${selected === "all_projects" ? "text-white bg-white/10" : "text-gray-400 hover:text-gray-200 hover:bg-white/5"}`}
                             style={{ paddingLeft: "22px", paddingRight: "8px" }}
-                            onClick={() => setSelected("highlighted_projects")}
+                            onClick={() => setSelected("all_projects")}
                         >
                             <span className="w-2.5 shrink-0" />
-                            highlighted_projects
+                            all_projects
                         </div>
 
                         {/* Individual repos */}
@@ -245,8 +260,8 @@ const ProjectsSection = () => {
                                 borderRight: "1px solid rgba(255,255,255,0.07)",
                             }}
                         >
-                            {selected === "highlighted_projects"
-                                ? "highlighted projects"
+                            {selected === "all_projects"
+                                ? "all projects"
                                 : selected}
                         </div>
                     </div>
