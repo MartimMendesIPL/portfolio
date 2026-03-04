@@ -56,7 +56,7 @@ const BottomBar = () => {
                 className="flex items-center gap-2 text-xs font-mono tracking-wider text-gray-400 hover:text-purple-400 transition-colors duration-200"
             >
                 <FontAwesomeIcon icon={faGithub} size="lg" />
-                @MartimMendesIPL
+                <span className="hidden sm:inline">@MartimMendesIPL</span>
             </a>
         </div>
     );

@@ -132,9 +132,9 @@ const ContactSection = () => {
                 className="flex flex-1 overflow-hidden"
                 style={{ borderTop: "1px solid rgba(255,255,255,0.07)" }}
             >
-                {/* ── Col 1: Sidebar ── */}
+                {/* ── Col 1: Sidebar (desktop only) ── */}
                 <div
-                    className="shrink-0 flex flex-col overflow-hidden"
+                    className="hidden md:flex shrink-0 flex-col overflow-hidden"
                     style={{
                         width: "190px",
                         borderRight: "1px solid rgba(255,255,255,0.07)",
@@ -199,9 +199,9 @@ const ContactSection = () => {
                         </div>
                     </div>
 
-                    {/* Editor content*/}
+                    {/* Editor content */}
                     <div className="flex flex-1 overflow-y-auto justify-center items-start">
-                        <div className="w-full max-w-2xl px-14 py-12">
+                        <div className="w-full max-w-2xl px-4 sm:px-8 md:px-14 py-6 sm:py-12">
                             {status === "sent" ? (
                                 /* Success state */
                                 <div className="flex flex-col items-center gap-5 text-center px-6">

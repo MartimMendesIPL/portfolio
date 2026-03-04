@@ -137,12 +137,68 @@ const Skeleton = () => (
     </div>
 );
 
+/* ── Sidebar content ── */
+interface SidebarContentProps {
+    selected: string;
+    sidebarItems: { id: string; label: string }[];
+    onSelect: (id: string) => void;
+}
+
+const SidebarContent = ({
+    selected,
+    sidebarItems,
+    onSelect,
+}: SidebarContentProps) => (
+    <div className="overflow-y-auto flex-1 pt-2 pb-4">
+        {/* "projects" folder header */}
+        <div className="flex items-center gap-1.5 px-2 py-0.5 text-sm font-mono text-gray-300 select-none">
+            <svg
+                width="10"
+                height="10"
+                viewBox="0 0 10 10"
+                fill="currentColor"
+                className="rotate-90 text-gray-500"
+            >
+                <path d="M3 2l4 3-4 3V2z" />
+            </svg>
+            <span>projects</span>
+        </div>
+
+        {/* "all_projects" entry */}
+        <div
+            className={`flex items-center gap-1.5 py-0.5 cursor-pointer select-none text-xs font-mono transition-colors duration-100 ${selected === "all_projects" ? "text-white bg-white/10" : "text-gray-400 hover:text-gray-200 hover:bg-white/5"}`}
+            style={{ paddingLeft: "22px", paddingRight: "8px" }}
+            onClick={() => onSelect("all_projects")}
+        >
+            <span className="w-2.5 shrink-0" />
+            all_projects
+        </div>
+
+        {/* Individual repos */}
+        {sidebarItems.map((item) => (
+            <div
+                key={item.id}
+                className={`flex items-center gap-1.5 py-0.5 cursor-pointer select-none text-xs font-mono transition-colors duration-100 ${selected === item.id ? "text-white bg-white/10" : "text-gray-400 hover:text-gray-200 hover:bg-white/5"}`}
+                style={{
+                    paddingLeft: "22px",
+                    paddingRight: "8px",
+                }}
+                onClick={() => onSelect(item.id)}
+            >
+                <span className="w-2.5 shrink-0" />
+                {item.label}
+            </div>
+        ))}
+    </div>
+);
+
 /* ── Main section ── */
 const ProjectsSection = () => {
     const [repos, setRepos] = useState<Repo[]>([]);
     const [selected, setSelected] = useState<string>("all_projects");
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
+    const [showSidebar, setShowSidebar] = useState(false);
 
     useEffect(() => {
         fetch(
@@ -171,19 +227,88 @@ const ProjectsSection = () => {
             ? repos
             : repos.filter((r) => r.name === selected);
 
+    const handleSelect = (id: string) => {
+        setSelected(id);
+        setShowSidebar(false);
+    };
+
     return (
         <section
             id="projects"
             className="flex flex-col"
-            style={{ height: "100vh", paddingTop: "56px" }}
+            style={{ minHeight: "100vh", height: "100vh", paddingTop: "56px" }}
         >
+            {/* ── Mobile toolbar ── */}
+            <div
+                className="flex md:hidden items-center justify-between px-3 py-1.5 shrink-0"
+                style={{
+                    borderBottom: "1px solid rgba(255,255,255,0.07)",
+                    background: "rgba(8,6,18,0.8)",
+                }}
+            >
+                <button
+                    onClick={() => setShowSidebar((o) => !o)}
+                    className="flex items-center gap-1.5 text-xs font-mono text-gray-400 hover:text-white transition-colors px-2 py-1 rounded"
+                    style={{
+                        background: showSidebar
+                            ? "rgba(255,255,255,0.08)"
+                            : "transparent",
+                        border: "1px solid rgba(255,255,255,0.08)",
+                    }}
+                >
+                    <svg
+                        width="12"
+                        height="12"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                    >
+                        <path d="M3 6h18M3 12h18M3 18h18" />
+                    </svg>
+                    explorer
+                </button>
+
+                <span className="text-xs font-mono text-gray-500">
+                    {selected === "all_projects" ? "all projects" : selected}
+                </span>
+            </div>
+
+            {/* ── Mobile sidebar dropdown ── */}
+            {showSidebar && (
+                <div
+                    className="md:hidden shrink-0 flex flex-col overflow-hidden"
+                    style={{
+                        borderBottom: "1px solid rgba(255,255,255,0.07)",
+                        background: "rgba(8,6,18,0.97)",
+                        maxHeight: "40vh",
+                    }}
+                >
+                    <div
+                        className="px-3 py-2 text-xs font-mono text-gray-600 tracking-widest uppercase select-none shrink-0"
+                        style={{
+                            borderBottom: "1px solid rgba(255,255,255,0.05)",
+                        }}
+                    >
+                        explorer
+                    </div>
+                    <SidebarContent
+                        selected={selected}
+                        sidebarItems={sidebarItems}
+                        onSelect={handleSelect}
+                    />
+                </div>
+            )}
+
             <div
                 className="flex flex-1 overflow-hidden"
                 style={{ borderTop: "1px solid rgba(255,255,255,0.07)" }}
             >
-                {/* ── Col 1: Sidebar ── */}
+                {/* ── Col 1: Sidebar (desktop only) ── */}
                 <div
-                    className="shrink-0 flex flex-col overflow-hidden"
+                    className="hidden md:flex shrink-0 flex-col overflow-hidden"
                     style={{
                         width: "190px",
                         borderRight: "1px solid rgba(255,255,255,0.07)",
@@ -198,48 +323,11 @@ const ProjectsSection = () => {
                     >
                         explorer
                     </div>
-
-                    <div className="overflow-y-auto flex-1 pt-2 pb-4">
-                        {/* "projects" folder header */}
-                        <div className="flex items-center gap-1.5 px-2 py-0.5 text-sm font-mono text-gray-300 select-none">
-                            <svg
-                                width="10"
-                                height="10"
-                                viewBox="0 0 10 10"
-                                fill="currentColor"
-                                className="rotate-90 text-gray-500"
-                            >
-                                <path d="M3 2l4 3-4 3V2z" />
-                            </svg>
-                            <span>projects</span>
-                        </div>
-
-                        {/* "all_projects" entry */}
-                        <div
-                            className={`flex items-center gap-1.5 py-0.5 cursor-pointer select-none text-xs font-mono transition-colors duration-100 ${selected === "all_projects" ? "text-white bg-white/10" : "text-gray-400 hover:text-gray-200 hover:bg-white/5"}`}
-                            style={{ paddingLeft: "22px", paddingRight: "8px" }}
-                            onClick={() => setSelected("all_projects")}
-                        >
-                            <span className="w-2.5 shrink-0" />
-                            all_projects
-                        </div>
-
-                        {/* Individual repos */}
-                        {sidebarItems.map((item) => (
-                            <div
-                                key={item.id}
-                                className={`flex items-center gap-1.5 py-0.5 cursor-pointer select-none text-xs font-mono transition-colors duration-100 ${selected === item.id ? "text-white bg-white/10" : "text-gray-400 hover:text-gray-200 hover:bg-white/5"}`}
-                                style={{
-                                    paddingLeft: "22px",
-                                    paddingRight: "8px",
-                                }}
-                                onClick={() => setSelected(item.id)}
-                            >
-                                <span className="w-2.5 shrink-0" />
-                                {item.label}
-                            </div>
-                        ))}
-                    </div>
+                    <SidebarContent
+                        selected={selected}
+                        sidebarItems={sidebarItems}
+                        onSelect={handleSelect}
+                    />
                 </div>
 
                 {/* ── Col 2: Main panel ── */}
@@ -249,7 +337,7 @@ const ProjectsSection = () => {
                 >
                     {/* Tab bar */}
                     <div
-                        className="flex items-stretch shrink-0"
+                        className="hidden md:flex items-stretch shrink-0"
                         style={{
                             borderBottom: "1px solid rgba(255,255,255,0.07)",
                         }}
@@ -267,7 +355,7 @@ const ProjectsSection = () => {
                     </div>
 
                     {/* Grid */}
-                    <div className="flex-1 overflow-y-auto p-5">
+                    <div className="flex-1 overflow-y-auto p-3 sm:p-5">
                         {error && (
                             <p className="text-gray-500 font-mono text-sm">
                                 // failed to load repos from GitHub
@@ -275,14 +363,18 @@ const ProjectsSection = () => {
                         )}
 
                         {loading ? (
-                            <div className="grid grid-cols-3 gap-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                                 {Array.from({ length: 6 }).map((_, i) => (
                                     <Skeleton key={i} />
                                 ))}
                             </div>
                         ) : (
                             <div
-                                className={`grid gap-4 ${displayRepos.length === 1 ? "grid-cols-1 max-w-sm" : "grid-cols-3"}`}
+                                className={`grid gap-4 ${
+                                    displayRepos.length === 1
+                                        ? "grid-cols-1 max-w-sm"
+                                        : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+                                }`}
                             >
                                 {displayRepos.map((repo) => (
                                     <ProjectCard key={repo.id} repo={repo} />
