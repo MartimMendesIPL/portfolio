@@ -7,8 +7,9 @@
 
 html {
     scrollbar-width: none;
-    scroll-snap-type: y proximity;
-    overscroll-behavior: none;
+    scroll-snap-type: y mandatory;
+    scroll-behavior: smooth;
+    background: #0a0814;
 }
 html::-webkit-scrollbar {
     display: none; /* Chrome, Safari */
@@ -22,6 +23,7 @@ body {
 /* Each full-page section snaps into view */
 section[id] {
     scroll-snap-align: start;
+    scroll-snap-stop: always;
 }
 
 @theme inline {
