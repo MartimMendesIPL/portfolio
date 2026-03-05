@@ -428,10 +428,10 @@ const ContactSection = () => {
                                             email
                                         </span>
                                         <a
-                                            href="mailto:martimmendes2004@gmail.com"
+                                            href="mailto:contact@martimmendes.dev"
                                             className="text-blue-400 hover:text-blue-300 underline underline-offset-2"
                                         >
-                                            martimmendes2004@gmail.com
+                                            contact@martimmendes.dev
                                         </a>
                                     </div>
                                 </div>
