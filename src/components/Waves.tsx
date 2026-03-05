@@ -293,13 +293,13 @@ const Waves: React.FC<WavesProps> = ({
             } = configRef.current;
             lines.forEach((pts) => {
                 pts.forEach((p) => {
-                    const move =
+                    const angle =
                         noise.perlin2(
                             (p.x + time * waveSpeedX) * 0.002,
                             (p.y + time * waveSpeedY) * 0.0015,
                         ) * 12;
-                    p.wave.x = Math.cos(move) * waveAmpX;
-                    p.wave.y = Math.sin(move) * waveAmpY;
+                    p.wave.x = Math.cos(angle) * waveAmpX;
+                    p.wave.y = Math.sin(angle) * waveAmpY;
 
                     const dx = p.x - mouse.sx,
                         dy = p.y - mouse.sy;
@@ -351,18 +351,13 @@ const Waves: React.FC<WavesProps> = ({
             ctx.beginPath();
             ctx.strokeStyle = configRef.current.lineColor;
             linesRef.current.forEach((points) => {
-                let p1 = moved(points[0], false);
+                const p1 = moved(points[0], false);
                 ctx.moveTo(p1.x, p1.y);
-                points.forEach((p, idx) => {
+                for (let idx = 1; idx < points.length; idx++) {
                     const isLast = idx === points.length - 1;
-                    p1 = moved(p, !isLast);
-                    const p2 = moved(
-                        points[idx + 1] || points[points.length - 1],
-                        !isLast,
-                    );
-                    ctx.lineTo(p1.x, p1.y);
-                    if (isLast) ctx.moveTo(p2.x, p2.y);
-                });
+                    const pt = moved(points[idx], !isLast);
+                    ctx.lineTo(pt.x, pt.y);
+                }
             });
             ctx.stroke();
         }
