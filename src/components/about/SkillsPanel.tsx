@@ -5,7 +5,7 @@ interface SkillBadgeProps {
 }
 
 const SkillBadge = ({ label, checked = false }: SkillBadgeProps) => (
-    <div className="flex items-center gap-1.5 text-sm font-mono">
+    <div className="flex items-center gap-1.5 text-sm font-mono min-w-0">
         <span
             className={`w-3.5 h-3.5 rounded-sm border flex items-center justify-center shrink-0 ${
                 checked
@@ -25,7 +25,9 @@ const SkillBadge = ({ label, checked = false }: SkillBadgeProps) => (
                 </svg>
             )}
         </span>
-        <span className={checked ? "text-gray-300" : "text-gray-500"}>
+        <span
+            className={`min-w-0 truncate ${checked ? "text-gray-300" : "text-gray-500"}`}
+        >
             {label}
         </span>
     </div>
@@ -78,7 +80,7 @@ const SkillCard = ({ handle, sectionLabel, skills }: SkillCardProps) => (
         </p>
 
         {/* Skills grid */}
-        <div className="grid grid-cols-3 gap-x-2 gap-y-2">
+        <div className="flex flex-wrap gap-x-4 gap-y-2">
             {skills.map((s, i) => (
                 <SkillBadge key={i} label={s.label} checked={s.checked} />
             ))}
