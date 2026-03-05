@@ -202,6 +202,8 @@ const ProjectsSection = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
     const [showSidebar, setShowSidebar] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+    const ITEMS_PER_PAGE = 6;
 
     useEffect(() => {
         fetch(
@@ -209,9 +211,7 @@ const ProjectsSection = () => {
         )
             .then((r) => r.json())
             .then((data: Repo[]) => {
-                const filtered = data
-                    .filter((r) => !EXCLUDED.has(r.name))
-                    .slice(0, 12);
+                const filtered = data.filter((r) => !EXCLUDED.has(r.name));
                 setRepos(filtered);
                 setSelected("all_projects");
             })
@@ -225,22 +225,40 @@ const ProjectsSection = () => {
         : repos.map((r) => ({ id: r.name, label: r.name }));
 
     /* Cards to show — all_projects = all, or single repo */
-    const displayRepos =
+    const filteredRepos =
         selected === "all_projects"
             ? repos
             : repos.filter((r) => r.name === selected);
 
+    const totalPages = Math.ceil(filteredRepos.length / ITEMS_PER_PAGE);
+    const displayRepos = filteredRepos.slice(
+        (currentPage - 1) * ITEMS_PER_PAGE,
+        currentPage * ITEMS_PER_PAGE,
+    );
+
     const handleSelect = (id: string) => {
         setSelected(id);
         setShowSidebar(false);
+        setCurrentPage(1);
     };
 
     return (
         <section
             id="projects"
             className="flex flex-col"
-            style={{ minHeight: "100vh", height: "100vh", paddingTop: "56px" }}
+            style={{ minHeight: "100vh", paddingTop: "56px" }}
         >
+            <style>
+                {`
+                @keyframes window-open {
+                    0% { opacity: 0; transform: scale(0.95); }
+                    100% { opacity: 1; transform: scale(1); }
+                }
+                .animate-window-open {
+                    animation: window-open 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+                }
+                `}
+            </style>
             {/* ── Mobile toolbar ── */}
             <div
                 className="flex md:hidden items-center justify-between px-3 py-1.5 shrink-0"
@@ -372,17 +390,55 @@ const ProjectsSection = () => {
                                 ))}
                             </div>
                         ) : (
-                            <div
-                                className={`grid gap-4 ${
-                                    displayRepos.length === 1
-                                        ? "grid-cols-1 max-w-sm"
-                                        : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
-                                }`}
-                            >
-                                {displayRepos.map((repo) => (
-                                    <ProjectCard key={repo.id} repo={repo} />
-                                ))}
-                            </div>
+                            <>
+                                <div
+                                    key={currentPage}
+                                    className={`grid gap-4 animate-window-open ${
+                                        displayRepos.length === 1
+                                            ? "grid-cols-1 max-w-sm"
+                                            : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+                                    }`}
+                                >
+                                    {displayRepos.map((repo) => (
+                                        <ProjectCard
+                                            key={repo.id}
+                                            repo={repo}
+                                        />
+                                    ))}
+                                </div>
+
+                                {totalPages > 1 && (
+                                    <div className="flex justify-center items-center gap-4 mt-6">
+                                        <button
+                                            onClick={() =>
+                                                setCurrentPage((p) =>
+                                                    Math.max(1, p - 1),
+                                                )
+                                            }
+                                            disabled={currentPage === 1}
+                                            className="px-3 py-1 text-sm font-mono text-gray-400 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors rounded bg-white/5 border border-white/10"
+                                        >
+                                            prev
+                                        </button>
+                                        <span className="text-sm font-mono text-gray-500">
+                                            {currentPage} / {totalPages}
+                                        </span>
+                                        <button
+                                            onClick={() =>
+                                                setCurrentPage((p) =>
+                                                    Math.min(totalPages, p + 1),
+                                                )
+                                            }
+                                            disabled={
+                                                currentPage === totalPages
+                                            }
+                                            className="px-3 py-1 text-sm font-mono text-gray-400 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors rounded bg-white/5 border border-white/10"
+                                        >
+                                            next
+                                        </button>
+                                    </div>
+                                )}
+                            </>
                         )}
                     </div>
                 </div>
