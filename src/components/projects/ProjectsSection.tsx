@@ -112,29 +112,10 @@ const ProjectCard = ({ repo }: { repo: Repo }) => {
 
             {/* Body */}
             <div className="flex flex-col flex-1 p-4 gap-3">
-                {/* Repo name */}
-                <p className="text-sm font-mono text-gray-400">{repo.name}</p>
-
                 {/* Description */}
                 <p className="text-sm font-mono text-gray-300 leading-5 flex-1">
                     {repo.description ?? "No description provided."}
                 </p>
-
-                {/* Language tag */}
-                {repo.language && (
-                    <div className="flex items-center gap-1.5">
-                        <span
-                            className="w-2 h-2 rounded-full shrink-0"
-                            style={{
-                                background:
-                                    LANG_COLORS[repo.language] ?? "#888",
-                            }}
-                        />
-                        <span className="text-sm font-mono text-gray-500">
-                            {repo.language}
-                        </span>
-                    </div>
-                )}
 
                 {/* GitHub button */}
                 <a
