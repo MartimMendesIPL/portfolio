@@ -42,7 +42,7 @@ const Field = ({
                 disabled={disabled}
                 rows={6}
                 placeholder="Value"
-                className="w-full resize-none rounded text-sm font-mono text-gray-100 placeholder-gray-500 outline-none transition-colors duration-150"
+                className="w-full resize-none rounded-none text-sm font-mono text-gray-100 placeholder-gray-500 outline-none transition-colors duration-150"
                 style={{
                     background: "rgba(255,255,255,0.06)",
                     border: "1px solid rgba(255,255,255,0.15)",
@@ -63,7 +63,7 @@ const Field = ({
                 onChange={(e) => onChange(name, e.target.value)}
                 disabled={disabled}
                 placeholder="Value"
-                className="w-full rounded text-sm font-mono text-gray-100 placeholder-gray-500 outline-none transition-colors duration-150"
+                className="w-full rounded-none text-sm font-mono text-gray-100 placeholder-gray-500 outline-none transition-colors duration-150"
                 style={{
                     background: "rgba(255,255,255,0.06)",
                     border: "1px solid rgba(255,255,255,0.15)",
@@ -269,7 +269,7 @@ const ContactSection = () => {
                                     /* Success state */
                                     <div className="flex flex-col items-center gap-5 text-center px-6">
                                         <div
-                                            className="w-16 h-16 rounded-full flex items-center justify-center"
+                                            className="w-16 h-16 rounded-none flex items-center justify-center"
                                             style={{
                                                 background:
                                                     "rgba(168,85,247,0.15)",
@@ -362,7 +362,7 @@ const ContactSection = () => {
                                                 !form.email ||
                                                 !form.message
                                             }
-                                            className="w-full py-3 text-sm font-mono tracking-widest transition-all duration-200 rounded disabled:opacity-40 disabled:cursor-not-allowed"
+                                            className="w-full py-3 text-sm font-mono tracking-widest transition-all duration-200 rounded-none disabled:opacity-40 disabled:cursor-not-allowed"
                                             style={{
                                                 background: isBusy
                                                     ? "rgba(168,85,247,0.3)"

@@ -25,7 +25,7 @@ const ProjectCard = ({
 }) => {
     return (
         <div
-            className="flex flex-col rounded-lg overflow-hidden cursor-pointer hover:bg-white/[0.05] transition-colors"
+            className="flex flex-col rounded-none overflow-hidden cursor-pointer hover:bg-white/[0.05] transition-colors"
             style={{
                 background: "rgba(255,255,255,0.03)",
                 border: "1px solid rgba(255,255,255,0.08)",
@@ -50,9 +50,9 @@ const ProjectCard = ({
                     }}
                 >
                     <div className="flex gap-1.5">
-                        <div className="w-2.5 h-2.5 rounded-full bg-red-500/70" />
-                        <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/70" />
-                        <div className="w-2.5 h-2.5 rounded-full bg-green-500/70" />
+                        <div className="w-2.5 h-2.5 rounded-none bg-red-500/70" />
+                        <div className="w-2.5 h-2.5 rounded-none bg-yellow-500/70" />
+                        <div className="w-2.5 h-2.5 rounded-none bg-green-500/70" />
                     </div>
                     <span className="text-xs font-mono text-gray-500 ml-1 truncate">
                         {repo.name}
@@ -117,7 +117,7 @@ const ProjectCard = ({
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={(e) => e.stopPropagation()}
-                    className="mt-auto text-center text-sm font-mono text-gray-300 hover:text-white transition-colors duration-150 py-1.5 rounded"
+                    className="mt-auto text-center text-sm font-mono text-gray-300 hover:text-white transition-colors duration-150 py-1.5 rounded-none"
                     style={{ border: "1px solid rgba(255,255,255,0.12)" }}
                 >
                     view project on github
@@ -141,7 +141,7 @@ const ProjectDetail = ({ repo }: { repo: Repo }) => {
                             href={repo.homepage}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="px-3 py-1.5 text-xs text-blue-400 bg-blue-400/10 hover:bg-blue-400/20 rounded transition-colors border border-blue-400/20"
+                            className="px-3 py-1.5 text-xs text-blue-400 bg-blue-400/10 hover:bg-blue-400/20 rounded-none transition-colors border border-blue-400/20"
                         >
                             live_demo ↗
                         </a>
@@ -150,7 +150,7 @@ const ProjectDetail = ({ repo }: { repo: Repo }) => {
                         href={repo.html_url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="px-3 py-1.5 text-xs text-gray-300 bg-white/5 hover:bg-white/10 rounded transition-colors border border-white/10"
+                        className="px-3 py-1.5 text-xs text-gray-300 bg-white/5 hover:bg-white/10 rounded-none transition-colors border border-white/10"
                     >
                         github ↗
                     </a>
@@ -176,7 +176,7 @@ const ProjectDetail = ({ repo }: { repo: Repo }) => {
                                 {repo.topics.map((t) => (
                                     <span
                                         key={t}
-                                        className="px-2 py-1 bg-white/5 border border-white/10 rounded text-xs text-gray-400"
+                                        className="px-2 py-1 bg-white/5 border border-white/10 rounded-none text-xs text-gray-400"
                                     >
                                         {t}
                                     </span>
@@ -186,7 +186,7 @@ const ProjectDetail = ({ repo }: { repo: Repo }) => {
                     )}
                 </div>
 
-                <div className="space-y-4 bg-white/[0.02] border border-white/5 p-4 rounded h-fit">
+                <div className="space-y-4 bg-white/[0.02] border border-white/5 p-4 rounded-none h-fit">
                     <p className="text-purple-400/60 mb-2">{"/* stats */"}</p>
                     <div className="space-y-2 text-sm text-gray-400">
                         <div className="flex justify-between">
@@ -219,7 +219,7 @@ const ProjectDetail = ({ repo }: { repo: Repo }) => {
 /* ── Loading skeleton ── */
 const Skeleton = () => (
     <div
-        className="rounded-lg overflow-hidden animate-pulse"
+        className="rounded-none overflow-hidden animate-pulse"
         style={{
             background: "rgba(255,255,255,0.03)",
             border: "1px solid rgba(255,255,255,0.06)",
@@ -229,10 +229,10 @@ const Skeleton = () => (
             style={{ height: "170px", background: "rgba(255,255,255,0.05)" }}
         />
         <div className="p-4 space-y-2">
-            <div className="h-2 rounded bg-white/5 w-1/3" />
-            <div className="h-2 rounded bg-white/5 w-full" />
-            <div className="h-2 rounded bg-white/5 w-4/5" />
-            <div className="h-6 rounded bg-white/5 mt-4" />
+            <div className="h-2 rounded-none bg-white/5 w-1/3" />
+            <div className="h-2 rounded-none bg-white/5 w-full" />
+            <div className="h-2 rounded-none bg-white/5 w-4/5" />
+            <div className="h-6 rounded-none bg-white/5 mt-4" />
         </div>
     </div>
 );
@@ -411,7 +411,7 @@ const ProjectsSection = () => {
             >
                 <button
                     onClick={() => setShowSidebar((o) => !o)}
-                    className="flex items-center gap-1.5 text-xs font-mono text-gray-400 hover:text-white transition-colors px-2 py-1 rounded"
+                    className="flex items-center gap-1.5 text-xs font-mono text-gray-400 hover:text-white transition-colors px-2 py-1 rounded-none"
                     style={{
                         background: showSidebar
                             ? "rgba(255,255,255,0.08)"
@@ -584,7 +584,7 @@ const ProjectsSection = () => {
                                                     )
                                                 }
                                                 disabled={currentPage === 1}
-                                                className="px-3 py-1 text-sm font-mono text-gray-400 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors rounded bg-white/5 border border-white/10"
+                                                className="px-3 py-1 text-sm font-mono text-gray-400 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors rounded-none bg-white/5 border border-white/10"
                                             >
                                                 prev
                                             </button>
@@ -603,7 +603,7 @@ const ProjectsSection = () => {
                                                 disabled={
                                                     currentPage === totalPages
                                                 }
-                                                className="px-3 py-1 text-sm font-mono text-gray-400 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors rounded bg-white/5 border border-white/10"
+                                                className="px-3 py-1 text-sm font-mono text-gray-400 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors rounded-none bg-white/5 border border-white/10"
                                             >
                                                 next
                                             </button>

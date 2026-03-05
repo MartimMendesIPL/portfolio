@@ -7,7 +7,7 @@ interface SkillBadgeProps {
 const SkillBadge = ({ label, checked = false }: SkillBadgeProps) => (
     <div className="flex items-center gap-1.5 text-sm font-mono min-w-0">
         <span
-            className={`w-3.5 h-3.5 rounded-sm border flex items-center justify-center shrink-0 ${
+            className={`w-3.5 h-3.5 rounded-none border flex items-center justify-center shrink-0 ${
                 checked
                     ? "border-purple-500 bg-purple-500/20"
                     : "border-gray-600 bg-transparent"
@@ -42,7 +42,7 @@ interface SkillCardProps {
 
 const SkillCard = ({ handle, sectionLabel, skills }: SkillCardProps) => (
     <div
-        className="rounded-lg p-4 mb-3"
+        className="rounded-none p-4 mb-3"
         style={{
             background: "rgba(255,255,255,0.03)",
             border: "1px solid rgba(255,255,255,0.07)",
@@ -51,7 +51,7 @@ const SkillCard = ({ handle, sectionLabel, skills }: SkillCardProps) => (
         {/* Profile row */}
         <div className="flex items-center gap-2 mb-3">
             <div
-                className="w-7 h-7 rounded-full flex items-center justify-center shrink-0"
+                className="w-7 h-7 rounded-none flex items-center justify-center shrink-0"
                 style={{
                     background: "rgba(168,85,247,0.2)",
                     border: "1px solid rgba(168,85,247,0.3)",
@@ -145,7 +145,15 @@ const SkillsPanel = ({ tab, onClose }: SkillsPanelProps) => (
                 <span>{tab}</span>
                 <button
                     onClick={onClose}
-                    className="text-gray-600 hover:text-gray-200 transition-colors ml-1 leading-none"
+                    className="text-gray-500 hover:text-white hover:bg-white/[0.08] transition-colors ml-1 w-6 h-5 flex items-center justify-center rounded-none"
+                    style={{ border: "1px solid transparent" }}
+                    onMouseEnter={(e) =>
+                        (e.currentTarget.style.border =
+                            "1px solid rgba(255,255,255,0.1)")
+                    }
+                    onMouseLeave={(e) =>
+                        (e.currentTarget.style.border = "1px solid transparent")
+                    }
                     aria-label="Close skills"
                 >
                     ×
