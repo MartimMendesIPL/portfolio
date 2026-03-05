@@ -245,6 +245,17 @@ const EditorPanel = ({
 
     return (
         <div className="flex flex-col h-full overflow-hidden">
+            <style>
+                {`
+                @keyframes window-open {
+                    0% { opacity: 0; transform: scale(0.95); }
+                    100% { opacity: 1; transform: scale(1); }
+                }
+                .animate-window-open {
+                    animation: window-open 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+                }
+                `}
+            </style>
             {/* Tab bar */}
             <div className="flex items-stretch shrink-0 border-b border-white/10 overflow-x-auto">
                 {tabs.map((tab) => (
@@ -264,7 +275,16 @@ const EditorPanel = ({
                                 e.stopPropagation();
                                 onTabClose(tab.id);
                             }}
-                            className="text-gray-600 hover:text-gray-200 transition-colors ml-1 leading-none"
+                            className="text-gray-500 hover:text-white hover:bg-white/[0.08] transition-colors ml-1 w-6 h-5 flex items-center justify-center rounded-none"
+                            style={{ border: "1px solid transparent" }}
+                            onMouseEnter={(e) =>
+                                (e.currentTarget.style.border =
+                                    "1px solid rgba(255,255,255,0.1)")
+                            }
+                            onMouseLeave={(e) =>
+                                (e.currentTarget.style.border =
+                                    "1px solid transparent")
+                            }
                             aria-label={`Close ${tab.label}`}
                         >
                             ×
@@ -274,7 +294,10 @@ const EditorPanel = ({
             </div>
 
             {/* Content */}
-            <div className="flex-1 overflow-y-auto">
+            <div
+                key={activeTab}
+                className="flex-1 overflow-y-auto animate-window-open"
+            >
                 {CONTENT_MAP[activeTab] ?? (
                     <div className="p-5 font-mono text-base text-gray-600">
                         No content for "{activeTab}"

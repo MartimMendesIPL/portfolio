@@ -16,14 +16,21 @@ const GITHUB_USER = "MartimMendesIPL";
 const EXCLUDED = new Set([GITHUB_USER]);
 
 /* ── Single project card ── */
-const ProjectCard = ({ repo }: { repo: Repo }) => {
+const ProjectCard = ({
+    repo,
+    onClick,
+}: {
+    repo: Repo;
+    onClick: () => void;
+}) => {
     return (
         <div
-            className="flex flex-col rounded-lg overflow-hidden"
+            className="flex flex-col rounded-lg overflow-hidden cursor-pointer hover:bg-white/[0.05] transition-colors"
             style={{
                 background: "rgba(255,255,255,0.03)",
                 border: "1px solid rgba(255,255,255,0.08)",
             }}
+            onClick={onClick}
         >
             {/* Editor-like Preview */}
             <div
@@ -109,11 +116,101 @@ const ProjectCard = ({ repo }: { repo: Repo }) => {
                     href={repo.html_url}
                     target="_blank"
                     rel="noopener noreferrer"
+                    onClick={(e) => e.stopPropagation()}
                     className="mt-auto text-center text-sm font-mono text-gray-300 hover:text-white transition-colors duration-150 py-1.5 rounded"
                     style={{ border: "1px solid rgba(255,255,255,0.12)" }}
                 >
                     view project on github
                 </a>
+            </div>
+        </div>
+    );
+};
+
+/* ── Project Detail View ── */
+const ProjectDetail = ({ repo }: { repo: Repo }) => {
+    return (
+        <div className="flex flex-col gap-6 p-4 sm:p-8 max-w-4xl mx-auto w-full font-mono">
+            <div className="flex items-center justify-between border-b border-white/10 pb-4">
+                <h2 className="text-2xl text-gray-200 font-semibold">
+                    {repo.name}
+                </h2>
+                <div className="flex gap-3">
+                    {repo.homepage && (
+                        <a
+                            href={repo.homepage}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="px-3 py-1.5 text-xs text-blue-400 bg-blue-400/10 hover:bg-blue-400/20 rounded transition-colors border border-blue-400/20"
+                        >
+                            live_demo ↗
+                        </a>
+                    )}
+                    <a
+                        href={repo.html_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-3 py-1.5 text-xs text-gray-300 bg-white/5 hover:bg-white/10 rounded transition-colors border border-white/10"
+                    >
+                        github ↗
+                    </a>
+                </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="md:col-span-2 space-y-4">
+                    <div>
+                        <p className="text-purple-400/60 mb-2">
+                            {"/* description */"}
+                        </p>
+                        <p className="text-gray-300 leading-relaxed text-sm">
+                            {repo.description || "No description provided."}
+                        </p>
+                    </div>
+                    {repo.topics && repo.topics.length > 0 && (
+                        <div>
+                            <p className="text-purple-400/60 mb-2">
+                                {"/* topics */"}
+                            </p>
+                            <div className="flex flex-wrap gap-2">
+                                {repo.topics.map((t) => (
+                                    <span
+                                        key={t}
+                                        className="px-2 py-1 bg-white/5 border border-white/10 rounded text-xs text-gray-400"
+                                    >
+                                        {t}
+                                    </span>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+                </div>
+
+                <div className="space-y-4 bg-white/[0.02] border border-white/5 p-4 rounded h-fit">
+                    <p className="text-purple-400/60 mb-2">{"/* stats */"}</p>
+                    <div className="space-y-2 text-sm text-gray-400">
+                        <div className="flex justify-between">
+                            <span>stars</span>
+                            <span className="text-orange-400">
+                                {repo.stargazers_count}
+                            </span>
+                        </div>
+                        {repo.language && (
+                            <div className="flex justify-between">
+                                <span>language</span>
+                                <span className="text-green-400">
+                                    {repo.language}
+                                </span>
+                            </div>
+                        )}
+                        <div className="flex justify-between">
+                            <span>fork</span>
+                            <span className="text-blue-400">
+                                {repo.fork ? "true" : "false"}
+                            </span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     );
@@ -142,63 +239,97 @@ const Skeleton = () => (
 
 /* ── Sidebar content ── */
 interface SidebarContentProps {
-    selected: string;
+    activeTab: string;
     sidebarItems: { id: string; label: string }[];
     onSelect: (id: string) => void;
 }
 
 const SidebarContent = ({
-    selected,
+    activeTab,
     sidebarItems,
     onSelect,
-}: SidebarContentProps) => (
-    <div className="overflow-y-auto flex-1 pt-2 pb-4">
-        {/* "projects" folder header */}
-        <div className="flex items-center gap-1.5 px-2 py-0.5 text-sm font-mono text-gray-300 select-none">
-            <svg
-                width="10"
-                height="10"
-                viewBox="0 0 10 10"
-                fill="currentColor"
-                className="rotate-90 text-gray-500"
-            >
-                <path d="M3 2l4 3-4 3V2z" />
-            </svg>
-            <span>projects</span>
-        </div>
+}: SidebarContentProps) => {
+    const [isOpen, setIsOpen] = useState(true);
+    const [isMyProjectsOpen, setIsMyProjectsOpen] = useState(true);
 
-        {/* "all_projects" entry */}
-        <div
-            className={`flex items-center gap-1.5 py-0.5 cursor-pointer select-none text-xs font-mono transition-colors duration-100 ${selected === "all_projects" ? "text-white bg-white/10" : "text-gray-400 hover:text-gray-200 hover:bg-white/5"}`}
-            style={{ paddingLeft: "22px", paddingRight: "8px" }}
-            onClick={() => onSelect("all_projects")}
-        >
-            <span className="w-2.5 shrink-0" />
-            all_projects
-        </div>
-
-        {/* Individual repos */}
-        {sidebarItems.map((item) => (
+    return (
+        <div className="overflow-y-auto flex-1 pt-2 pb-4">
+            {/* "projects" folder header */}
             <div
-                key={item.id}
-                className={`flex items-center gap-1.5 py-0.5 cursor-pointer select-none text-xs font-mono transition-colors duration-100 ${selected === item.id ? "text-white bg-white/10" : "text-gray-400 hover:text-gray-200 hover:bg-white/5"}`}
-                style={{
-                    paddingLeft: "22px",
-                    paddingRight: "8px",
-                }}
-                onClick={() => onSelect(item.id)}
+                className="flex items-center gap-1.5 px-2 py-0.5 text-sm font-mono text-gray-300 cursor-pointer select-none hover:bg-white/5 transition-colors"
+                onClick={() => setIsOpen(!isOpen)}
             >
-                <span className="w-2.5 shrink-0" />
-                {item.label}
+                <svg
+                    width="10"
+                    height="10"
+                    viewBox="0 0 10 10"
+                    fill="currentColor"
+                    className={`text-gray-500 transition-transform duration-150 ${isOpen ? "rotate-90" : ""}`}
+                >
+                    <path d="M3 2l4 3-4 3V2z" />
+                </svg>
+                <span>projects</span>
             </div>
-        ))}
-    </div>
-);
+
+            {isOpen && (
+                <>
+                    {/* "all_projects" entry */}
+                    <div
+                        className={`flex items-center gap-1.5 py-0.5 cursor-pointer select-none text-xs font-mono transition-colors duration-100 ${activeTab === "all_projects" ? "text-white bg-white/10" : "text-gray-400 hover:text-gray-200 hover:bg-white/5"}`}
+                        style={{ paddingLeft: "22px", paddingRight: "8px" }}
+                        onClick={() => onSelect("all_projects")}
+                    >
+                        <span className="w-2.5 shrink-0" />
+                        all_projects
+                    </div>
+
+                    {/* "my_projects" folder */}
+                    <div
+                        className="flex items-center gap-1.5 py-0.5 cursor-pointer select-none text-xs font-mono text-gray-400 hover:text-gray-200 hover:bg-white/5 transition-colors"
+                        style={{ paddingLeft: "22px", paddingRight: "8px" }}
+                        onClick={() => setIsMyProjectsOpen(!isMyProjectsOpen)}
+                    >
+                        <svg
+                            width="10"
+                            height="10"
+                            viewBox="0 0 10 10"
+                            fill="currentColor"
+                            className={`text-gray-500 transition-transform duration-150 ${isMyProjectsOpen ? "rotate-90" : ""}`}
+                        >
+                            <path d="M3 2l4 3-4 3V2z" />
+                        </svg>
+                        my_projects
+                    </div>
+
+                    {/* Individual repos */}
+                    {isMyProjectsOpen &&
+                        sidebarItems.map((item) => (
+                            <div
+                                key={item.id}
+                                className={`flex items-center gap-1.5 py-0.5 cursor-pointer select-none text-xs font-mono transition-colors duration-100 ${activeTab === item.id ? "text-white bg-white/10" : "text-gray-400 hover:text-gray-200 hover:bg-white/5"}`}
+                                style={{
+                                    paddingLeft: "36px",
+                                    paddingRight: "8px",
+                                }}
+                                onClick={() => onSelect(item.id)}
+                            >
+                                <span className="w-2.5 shrink-0" />
+                                {item.label}
+                            </div>
+                        ))}
+                </>
+            )}
+        </div>
+    );
+};
 
 /* ── Main section ── */
 const ProjectsSection = () => {
     const [repos, setRepos] = useState<Repo[]>([]);
-    const [selected, setSelected] = useState<string>("all_projects");
+    const [openTabs, setOpenTabs] = useState<{ id: string; label: string }[]>([
+        { id: "all_projects", label: "all_projects" },
+    ]);
+    const [activeTab, setActiveTab] = useState<string>("all_projects");
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
     const [showSidebar, setShowSidebar] = useState(false);
@@ -213,7 +344,6 @@ const ProjectsSection = () => {
             .then((data: Repo[]) => {
                 const filtered = data.filter((r) => !EXCLUDED.has(r.name));
                 setRepos(filtered);
-                setSelected("all_projects");
             })
             .catch(() => setError(true))
             .finally(() => setLoading(false));
@@ -224,22 +354,34 @@ const ProjectsSection = () => {
         ? []
         : repos.map((r) => ({ id: r.name, label: r.name }));
 
-    /* Cards to show — all_projects = all, or single repo */
-    const filteredRepos =
-        selected === "all_projects"
-            ? repos
-            : repos.filter((r) => r.name === selected);
-
-    const totalPages = Math.ceil(filteredRepos.length / ITEMS_PER_PAGE);
-    const displayRepos = filteredRepos.slice(
+    const totalPages = Math.ceil(repos.length / ITEMS_PER_PAGE);
+    const displayRepos = repos.slice(
         (currentPage - 1) * ITEMS_PER_PAGE,
         currentPage * ITEMS_PER_PAGE,
     );
 
     const handleSelect = (id: string) => {
-        setSelected(id);
+        setOpenTabs((prev) => {
+            if (prev.find((t) => t.id === id)) return prev;
+            return [...prev, { id, label: id }];
+        });
+        setActiveTab(id);
         setShowSidebar(false);
-        setCurrentPage(1);
+        if (id === "all_projects") {
+            setCurrentPage(1);
+        }
+    };
+
+    const handleTabClose = (id: string) => {
+        setOpenTabs((prev) => {
+            const next = prev.filter((t) => t.id !== id);
+            if (activeTab === id && next.length > 0) {
+                setActiveTab(next[next.length - 1].id);
+            } else if (next.length === 0) {
+                setActiveTab("");
+            }
+            return next;
+        });
     };
 
     return (
@@ -293,7 +435,7 @@ const ProjectsSection = () => {
                 </button>
 
                 <span className="text-xs font-mono text-gray-500">
-                    {selected === "all_projects" ? "all projects" : selected}
+                    {activeTab === "all_projects" ? "all projects" : activeTab}
                 </span>
             </div>
 
@@ -316,7 +458,7 @@ const ProjectsSection = () => {
                         explorer
                     </div>
                     <SidebarContent
-                        selected={selected}
+                        activeTab={activeTab}
                         sidebarItems={sidebarItems}
                         onSelect={handleSelect}
                     />
@@ -345,7 +487,7 @@ const ProjectsSection = () => {
                         explorer
                     </div>
                     <SidebarContent
-                        selected={selected}
+                        activeTab={activeTab}
                         sidebarItems={sidebarItems}
                         onSelect={handleSelect}
                     />
@@ -358,24 +500,50 @@ const ProjectsSection = () => {
                 >
                     {/* Tab bar */}
                     <div
-                        className="hidden md:flex items-stretch shrink-0"
+                        className="flex items-stretch shrink-0 overflow-x-auto"
                         style={{
                             borderBottom: "1px solid rgba(255,255,255,0.07)",
                         }}
                     >
-                        <div
-                            className="flex items-center gap-2 px-4 py-2 text-sm font-mono text-white bg-white/5 cursor-default"
-                            style={{
-                                borderRight: "1px solid rgba(255,255,255,0.07)",
-                            }}
-                        >
-                            {selected === "all_projects"
-                                ? "all projects"
-                                : selected}
-                        </div>
+                        {openTabs.map((tab) => (
+                            <div
+                                key={tab.id}
+                                onClick={() => setActiveTab(tab.id)}
+                                className={`flex items-center gap-2 px-4 py-2 text-xs font-mono cursor-pointer border-r border-white/10 shrink-0 transition-colors duration-100 ${
+                                    activeTab === tab.id
+                                        ? "text-white bg-white/5"
+                                        : "text-gray-500 hover:text-gray-300 hover:bg-white/[0.03]"
+                                }`}
+                            >
+                                <span>{tab.label}</span>
+                                {tab.id !== "all_projects" && (
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleTabClose(tab.id);
+                                        }}
+                                        className="text-gray-500 hover:text-white hover:bg-white/[0.08] transition-colors ml-1 w-6 h-5 flex items-center justify-center rounded-none"
+                                        style={{
+                                            border: "1px solid transparent",
+                                        }}
+                                        onMouseEnter={(e) =>
+                                            (e.currentTarget.style.border =
+                                                "1px solid rgba(255,255,255,0.1)")
+                                        }
+                                        onMouseLeave={(e) =>
+                                            (e.currentTarget.style.border =
+                                                "1px solid transparent")
+                                        }
+                                        aria-label={`Close ${tab.label}`}
+                                    >
+                                        ×
+                                    </button>
+                                )}
+                            </div>
+                        ))}
                     </div>
 
-                    {/* Grid */}
+                    {/* Content */}
                     <div className="flex-1 overflow-y-auto p-3 sm:p-5">
                         {error && (
                             <p className="text-gray-500 font-mono text-sm">
@@ -383,62 +551,79 @@ const ProjectsSection = () => {
                             </p>
                         )}
 
-                        {loading ? (
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                                {Array.from({ length: 6 }).map((_, i) => (
-                                    <Skeleton key={i} />
-                                ))}
-                            </div>
-                        ) : (
-                            <>
-                                <div
-                                    key={currentPage}
-                                    className={`grid gap-4 animate-window-open ${
-                                        displayRepos.length === 1
-                                            ? "grid-cols-1 max-w-sm"
-                                            : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
-                                    }`}
-                                >
-                                    {displayRepos.map((repo) => (
-                                        <ProjectCard
-                                            key={repo.id}
-                                            repo={repo}
-                                        />
+                        {activeTab === "all_projects" ? (
+                            loading ? (
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                                    {Array.from({ length: 6 }).map((_, i) => (
+                                        <Skeleton key={i} />
                                     ))}
                                 </div>
-
-                                {totalPages > 1 && (
-                                    <div className="flex justify-center items-center gap-4 mt-6">
-                                        <button
-                                            onClick={() =>
-                                                setCurrentPage((p) =>
-                                                    Math.max(1, p - 1),
-                                                )
-                                            }
-                                            disabled={currentPage === 1}
-                                            className="px-3 py-1 text-sm font-mono text-gray-400 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors rounded bg-white/5 border border-white/10"
-                                        >
-                                            prev
-                                        </button>
-                                        <span className="text-sm font-mono text-gray-500">
-                                            {currentPage} / {totalPages}
-                                        </span>
-                                        <button
-                                            onClick={() =>
-                                                setCurrentPage((p) =>
-                                                    Math.min(totalPages, p + 1),
-                                                )
-                                            }
-                                            disabled={
-                                                currentPage === totalPages
-                                            }
-                                            className="px-3 py-1 text-sm font-mono text-gray-400 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors rounded bg-white/5 border border-white/10"
-                                        >
-                                            next
-                                        </button>
+                            ) : (
+                                <>
+                                    <div
+                                        key={currentPage}
+                                        className={`grid gap-4 animate-window-open grid-cols-1 sm:grid-cols-2 lg:grid-cols-3`}
+                                    >
+                                        {displayRepos.map((repo) => (
+                                            <ProjectCard
+                                                key={repo.id}
+                                                repo={repo}
+                                                onClick={() =>
+                                                    handleSelect(repo.name)
+                                                }
+                                            />
+                                        ))}
                                     </div>
+
+                                    {totalPages > 1 && (
+                                        <div className="flex justify-center items-center gap-4 mt-6">
+                                            <button
+                                                onClick={() =>
+                                                    setCurrentPage((p) =>
+                                                        Math.max(1, p - 1),
+                                                    )
+                                                }
+                                                disabled={currentPage === 1}
+                                                className="px-3 py-1 text-sm font-mono text-gray-400 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors rounded bg-white/5 border border-white/10"
+                                            >
+                                                prev
+                                            </button>
+                                            <span className="text-sm font-mono text-gray-500">
+                                                {currentPage} / {totalPages}
+                                            </span>
+                                            <button
+                                                onClick={() =>
+                                                    setCurrentPage((p) =>
+                                                        Math.min(
+                                                            totalPages,
+                                                            p + 1,
+                                                        ),
+                                                    )
+                                                }
+                                                disabled={
+                                                    currentPage === totalPages
+                                                }
+                                                className="px-3 py-1 text-sm font-mono text-gray-400 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors rounded bg-white/5 border border-white/10"
+                                            >
+                                                next
+                                            </button>
+                                        </div>
+                                    )}
+                                </>
+                            )
+                        ) : (
+                            <div className="flex w-full h-full text-gray-500 font-mono text-sm animate-window-open items-start">
+                                {/* Details for single project */}
+                                {repos.find((r) => r.name === activeTab) && (
+                                    <ProjectDetail
+                                        repo={
+                                            repos.find(
+                                                (r) => r.name === activeTab,
+                                            )!
+                                        }
+                                    />
                                 )}
-                            </>
+                            </div>
                         )}
                     </div>
                 </div>
