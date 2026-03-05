@@ -7,13 +7,21 @@ import {
 } from "@fortawesome/free-brands-svg-icons";
 
 const socialLinks = [
-    { href: "https://x.com/martimyh", label: "X/Twitter", icon: faXTwitter },
+    {
+        href: "https://x.com/martimyh",
+        label: "X/Twitter",
+        icon: faXTwitter,
+    },
     {
         href: "https://instagram.com/martimyh",
         label: "Instagram",
         icon: faInstagram,
     },
-    { href: "https://linkedin.com", label: "LinkedIn", icon: faLinkedinIn },
+    {
+        href: "https://www.linkedin.com/in/martim-mendes-2b7922163/",
+        label: "LinkedIn",
+        icon: faLinkedinIn,
+    },
 ];
 
 const BottomBar = () => {
