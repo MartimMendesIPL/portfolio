@@ -30,9 +30,6 @@ const EXCLUDED = new Set([GITHUB_USER]);
 
 /* ── Single project card ── */
 const ProjectCard = ({ repo }: { repo: Repo }) => {
-    const [imgError, setImgError] = useState(false);
-    const ogImage = `https://opengraph.githubassets.com/1/${GITHUB_USER}/${repo.name}`;
-
     return (
         <div
             className="flex flex-col rounded-lg overflow-hidden"
@@ -41,38 +38,76 @@ const ProjectCard = ({ repo }: { repo: Repo }) => {
                 border: "1px solid rgba(255,255,255,0.08)",
             }}
         >
-            {/* Preview image */}
+            {/* Editor-like Preview */}
             <div
-                className="shrink-0 overflow-hidden flex items-center justify-center"
+                className="shrink-0 flex flex-col relative overflow-hidden"
                 style={{
-                    height: "170px",
-                    background: "rgba(255,255,255,0.04)",
+                    height: "160px",
+                    background: "rgba(8,6,18,0.4)",
                     borderBottom: "1px solid rgba(255,255,255,0.06)",
                 }}
             >
-                {imgError ? (
-                    <svg
-                        width="32"
-                        height="32"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="rgba(255,255,255,0.1)"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                    >
-                        <rect x="3" y="3" width="18" height="18" rx="2" />
-                        <circle cx="8.5" cy="8.5" r="1.5" />
-                        <polyline points="21 15 16 10 5 21" />
-                    </svg>
-                ) : (
-                    <img
-                        src={ogImage}
-                        alt={repo.name}
-                        onError={() => setImgError(true)}
-                        className="w-full h-full object-cover"
-                    />
-                )}
+                {/* Header */}
+                <div
+                    className="flex items-center px-3 py-2 shrink-0 gap-2"
+                    style={{
+                        background: "rgba(255,255,255,0.03)",
+                        borderBottom: "1px solid rgba(255,255,255,0.04)",
+                    }}
+                >
+                    <div className="flex gap-1.5">
+                        <div className="w-2.5 h-2.5 rounded-full bg-red-500/70" />
+                        <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/70" />
+                        <div className="w-2.5 h-2.5 rounded-full bg-green-500/70" />
+                    </div>
+                    <span className="text-xs font-mono text-gray-500 ml-1 truncate">
+                        {repo.name}
+                        {repo.language ? `.${repo.language.toLowerCase()}` : ""}
+                    </span>
+                </div>
+                {/* Code Body */}
+                <div className="flex-1 p-4 font-mono text-xs text-gray-400 overflow-hidden opacity-80">
+                    <div className="flex gap-3">
+                        <div className="flex flex-col text-gray-600 select-none items-end">
+                            <span>1</span>
+                            <span>2</span>
+                            <span>3</span>
+                            <span>4</span>
+                            {repo.language && <span>5</span>}
+                        </div>
+                        <div className="flex flex-col">
+                            <p>
+                                <span className="text-purple-400">const</span>{" "}
+                                <span className="text-blue-400">repo</span> ={" "}
+                                {"{"}
+                            </p>
+                            <p className="ml-4">
+                                name:{" "}
+                                <span className="text-green-400">
+                                    '{repo.name}'
+                                </span>
+                                ,
+                            </p>
+                            <p className="ml-4">
+                                stars:{" "}
+                                <span className="text-orange-400">
+                                    {repo.stargazers_count}
+                                </span>
+                                ,
+                            </p>
+                            {repo.language && (
+                                <p className="ml-4">
+                                    lang:{" "}
+                                    <span className="text-green-400">
+                                        '{repo.language}'
+                                    </span>
+                                    ,
+                                </p>
+                            )}
+                            <p>{"};"}</p>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             {/* Body */}
