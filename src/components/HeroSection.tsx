@@ -1,5 +1,5 @@
 import TypedText from "./TypedText";
-import { GridScan } from "./GridScan";
+import Waves from "./Waves";
 
 const HeroSection = () => {
     return (
@@ -8,32 +8,20 @@ const HeroSection = () => {
             className="relative flex items-center justify-center h-screen px-6 pb-16 md:pl-24 overflow-hidden"
             style={{ background: "#080612" }}
         >
-            {/* GridScan fills the entire hero background */}
+            {/* Waves fills the entire hero background */}
             <div className="absolute inset-0 z-0">
-                <GridScan
-                    linesColor="#1e1333"
-                    scanColor="#a855f7"
-                    lineThickness={1}
-                    gridScale={0.1}
-                    lineStyle="solid"
-                    lineJitter={0}
-                    scanOpacity={0.4}
-                    scanDirection="pingpong"
-                    scanSoftness={2}
-                    scanGlow={0.5}
-                    scanPhaseTaper={0.9}
-                    scanDuration={2.0}
-                    scanDelay={2.0}
-                    scanOnClick
-                    enablePost
-                    bloomIntensity={0}
-                    bloomThreshold={0}
-                    bloomSmoothing={0}
-                    chromaticAberration={0.002}
-                    noiseIntensity={0.01}
-                    enableWebcam={false}
-                    showPreview={false}
-                    sensitivity={0.55}
+                <Waves
+                    lineColor="rgba(168, 85, 247, 0.2)"
+                    backgroundColor="transparent"
+                    waveSpeedX={0.02}
+                    waveSpeedY={0.01}
+                    waveAmpX={40}
+                    waveAmpY={20}
+                    friction={0.9}
+                    tension={0.01}
+                    maxCursorMove={120}
+                    xGap={12}
+                    yGap={36}
                     className="w-full h-full"
                 />
             </div>
