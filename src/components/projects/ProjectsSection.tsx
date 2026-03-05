@@ -12,19 +12,6 @@ interface Repo {
     fork: boolean;
     topics: string[];
 }
-
-/* ── Language colour dots ── */
-const LANG_COLORS: Record<string, string> = {
-    TypeScript: "#3178c6",
-    JavaScript: "#f1e05a",
-    Python: "#3572A5",
-    "C++": "#f34b7d",
-    "C#": "#178600",
-    C: "#555555",
-    HTML: "#e34c26",
-    Shell: "#89e051",
-};
-
 const GITHUB_USER = "MartimMendesIPL";
 const EXCLUDED = new Set([GITHUB_USER]);
 
@@ -223,7 +210,7 @@ const ProjectsSection = () => {
             .then((r) => r.json())
             .then((data: Repo[]) => {
                 const filtered = data
-                    .filter((r) => !r.fork && !EXCLUDED.has(r.name))
+                    .filter((r) => !EXCLUDED.has(r.name))
                     .slice(0, 12);
                 setRepos(filtered);
                 setSelected("all_projects");
