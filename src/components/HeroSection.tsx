@@ -1,37 +1,42 @@
 import TypedText from "./TypedText";
-import DotGrid from "./DotGrid";
+import { GridScan } from "./GridScan";
 
 const HeroSection = () => {
     return (
         <section
             id="home"
             className="relative flex items-center justify-center h-screen px-6 pb-16 md:pl-24 overflow-hidden"
+            style={{ background: "#080612" }}
         >
-            {/* DotGrid fills the entire hero background */}
+            {/* GridScan fills the entire hero background */}
             <div className="absolute inset-0 z-0">
-                <DotGrid
-                    dotSize={4}
-                    gap={28}
-                    baseColor="#1e1333"
-                    activeColor="#a855f7"
-                    proximity={180}
-                    speedTrigger={80}
-                    shockRadius={280}
-                    shockStrength={4}
-                    resistance={700}
-                    returnDuration={1.5}
+                <GridScan
+                    linesColor="#1e1333"
+                    scanColor="#a855f7"
+                    lineThickness={1}
+                    gridScale={0.1}
+                    lineStyle="solid"
+                    lineJitter={0}
+                    scanOpacity={0.4}
+                    scanDirection="pingpong"
+                    scanSoftness={2}
+                    scanGlow={0.5}
+                    scanPhaseTaper={0.9}
+                    scanDuration={2.0}
+                    scanDelay={2.0}
+                    scanOnClick
+                    enablePost
+                    bloomIntensity={0}
+                    bloomThreshold={0}
+                    bloomSmoothing={0}
+                    chromaticAberration={0.002}
+                    noiseIntensity={0.01}
+                    enableWebcam={false}
+                    showPreview={false}
+                    sensitivity={0.55}
                     className="w-full h-full"
                 />
             </div>
-
-            {/* Subtle radial vignette to darken edges and help text legibility */}
-            <div
-                className="absolute inset-0 z-[1] pointer-events-none"
-                style={{
-                    background:
-                        "radial-gradient(ellipse at 30% 50%, transparent 30%, rgba(10,8,20,0.85) 100%)",
-                }}
-            />
 
             {/* Hero text content */}
             <div className="relative z-[2] max-w-lg text-center">
