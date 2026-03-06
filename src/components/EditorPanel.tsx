@@ -1,0 +1,101 @@
+import type { ReactNode } from "react";
+
+export interface Tab {
+    id: string;
+    label: string;
+    closable?: boolean;
+}
+
+interface EditorPanelProps {
+    tabs: Tab[];
+    activeTab: string;
+    onTabClose: (id: string) => void;
+    onTabSelect: (id: string) => void;
+    children?: ReactNode;
+}
+
+const EditorPanel = ({
+    tabs,
+    activeTab,
+    onTabClose,
+    onTabSelect,
+    children,
+}: EditorPanelProps) => {
+    if (tabs.length === 0) {
+        return (
+            <div className="flex-1 flex items-center justify-center">
+                <p className="text-gray-600 font-mono text-xs">
+                    select a file from the sidebar
+                </p>
+            </div>
+        );
+    }
+
+    return (
+        <div className="flex flex-col h-full overflow-hidden">
+            <style>
+                {`
+                @keyframes window-open {
+                    0% { opacity: 0; transform: scale(0.95); }
+                    100% { opacity: 1; transform: scale(1); }
+                }
+                .animate-window-open {
+                    animation: window-open 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+                }
+                `}
+            </style>
+            {/* Tab bar */}
+            <div className="flex items-stretch shrink-0 border-b border-white/10 overflow-x-auto">
+                {tabs.map((tab) => (
+                    <div
+                        key={tab.id}
+                        onClick={() => onTabSelect(tab.id)}
+                        className={`flex items-center gap-2 px-4 py-2 text-xs font-mono cursor-pointer border-r border-white/10 shrink-0 transition-colors duration-100
+                            ${
+                                activeTab === tab.id
+                                    ? "text-white bg-white/5"
+                                    : "text-gray-500 hover:text-gray-300 hover:bg-white/[0.03]"
+                            }`}
+                    >
+                        <span>{tab.label}</span>
+                        {tab.closable !== false && (
+                            <button
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    onTabClose(tab.id);
+                                }}
+                                className="text-gray-500 hover:text-white hover:bg-white/[0.08] transition-colors ml-1 w-6 h-5 flex items-center justify-center rounded-none"
+                                style={{ border: "1px solid transparent" }}
+                                onMouseEnter={(e) =>
+                                    (e.currentTarget.style.border =
+                                        "1px solid rgba(255,255,255,0.1)")
+                                }
+                                onMouseLeave={(e) =>
+                                    (e.currentTarget.style.border =
+                                        "1px solid transparent")
+                                }
+                                aria-label={`Close ${tab.label}`}
+                            >
+                                ×
+                            </button>
+                        )}
+                    </div>
+                ))}
+            </div>
+
+            {/* Content area */}
+            <div
+                key={activeTab}
+                className="flex-1 overflow-y-auto animate-window-open"
+            >
+                {children ?? (
+                    <div className="p-5 font-mono text-base text-gray-600">
+                        No content for "{activeTab}"
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+};
+
+export default EditorPanel;

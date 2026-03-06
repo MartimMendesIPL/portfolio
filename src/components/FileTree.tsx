@@ -1,40 +1,12 @@
 import { useState } from "react";
 
-interface TreeNode {
+export interface TreeNode {
     id: string;
     label: string;
     type: "folder" | "file";
     children?: TreeNode[];
     defaultOpen?: boolean;
 }
-
-const TREE: TreeNode[] = [
-    {
-        id: "personal-info",
-        label: "personal-info",
-        type: "folder",
-        defaultOpen: true,
-        children: [
-            { id: "bio", label: "bio", type: "file" },
-            { id: "interests", label: "interests", type: "file" },
-            { id: "experience", label: "experience", type: "file" },
-            {
-                id: "education",
-                label: "education",
-                type: "folder",
-                defaultOpen: true,
-                children: [
-                    { id: "university", label: "university", type: "file" },
-                    {
-                        id: "certifications",
-                        label: "certifications",
-                        type: "file",
-                    },
-                ],
-            },
-        ],
-    },
-];
 
 const ChevronIcon = ({ open }: { open: boolean }) => (
     <svg
@@ -101,15 +73,16 @@ const TreeItem = ({ node, depth, activeFile, onSelect }: TreeItemProps) => {
     );
 };
 
-interface FileTreeProps {
+export interface FileTreeProps {
+    tree: TreeNode[];
     activeFile: string;
     onSelect: (id: string) => void;
 }
 
-const FileTree = ({ activeFile, onSelect }: FileTreeProps) => {
+const FileTree = ({ tree, activeFile, onSelect }: FileTreeProps) => {
     return (
         <div className="h-full overflow-y-auto pt-2 pb-4">
-            {TREE.map((node) => (
+            {tree.map((node) => (
                 <TreeItem
                     key={node.id}
                     node={node}

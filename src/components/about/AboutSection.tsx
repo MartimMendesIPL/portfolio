@@ -1,12 +1,36 @@
 import { useState } from "react";
-import FileTree from "./FileTree";
-import EditorPanel from "./EditorPanel";
+import FileTree, { type TreeNode } from "../FileTree";
+import EditorPanel, { type Tab } from "../EditorPanel";
 import SkillsPanel from "./SkillsPanel";
+import { CONTENT_MAP } from "./AboutContent";
 
-interface Tab {
-    id: string;
-    label: string;
-}
+const ABOUT_TREE: TreeNode[] = [
+    {
+        id: "personal-info",
+        label: "personal-info",
+        type: "folder",
+        defaultOpen: true,
+        children: [
+            { id: "bio", label: "bio", type: "file" },
+            { id: "interests", label: "interests", type: "file" },
+            { id: "experience", label: "experience", type: "file" },
+            {
+                id: "education",
+                label: "education",
+                type: "folder",
+                defaultOpen: true,
+                children: [
+                    { id: "university", label: "university", type: "file" },
+                    {
+                        id: "certifications",
+                        label: "certifications",
+                        type: "file",
+                    },
+                ],
+            },
+        ],
+    },
+];
 
 const AboutSection = () => {
     const [openTabs, setOpenTabs] = useState<Tab[]>([
@@ -134,6 +158,7 @@ const AboutSection = () => {
                         explorer
                     </div>
                     <FileTree
+                        tree={ABOUT_TREE}
                         activeFile={activeTab}
                         onSelect={handleFileSelect}
                     />
@@ -180,6 +205,7 @@ const AboutSection = () => {
                         explorer
                     </div>
                     <FileTree
+                        tree={ABOUT_TREE}
                         activeFile={activeTab}
                         onSelect={handleFileSelect}
                     />
@@ -195,7 +221,9 @@ const AboutSection = () => {
                         activeTab={activeTab}
                         onTabClose={handleTabClose}
                         onTabSelect={setActiveTab}
-                    />
+                    >
+                        {CONTENT_MAP[activeTab]}
+                    </EditorPanel>
                 </div>
 
                 {/* ── Column 3: Skills panel ── */}
@@ -226,7 +254,9 @@ const AboutSection = () => {
                     activeTab={activeTab}
                     onTabClose={handleTabClose}
                     onTabSelect={setActiveTab}
-                />
+                >
+                    {CONTENT_MAP[activeTab]}
+                </EditorPanel>
             </div>
         </section>
     );

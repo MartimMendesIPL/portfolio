@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import FileTree, { type TreeNode } from "../FileTree";
+import EditorPanel, { type Tab } from "../EditorPanel";
 
 /* ── Types ── */
 interface Repo {
@@ -237,97 +239,11 @@ const Skeleton = () => (
     </div>
 );
 
-/* ── Sidebar content ── */
-interface SidebarContentProps {
-    activeTab: string;
-    sidebarItems: { id: string; label: string }[];
-    onSelect: (id: string) => void;
-}
-
-const SidebarContent = ({
-    activeTab,
-    sidebarItems,
-    onSelect,
-}: SidebarContentProps) => {
-    const [isOpen, setIsOpen] = useState(true);
-    const [isMyProjectsOpen, setIsMyProjectsOpen] = useState(true);
-
-    return (
-        <div className="overflow-y-auto flex-1 pt-2 pb-4">
-            {/* "projects" folder header */}
-            <div
-                className="flex items-center gap-1.5 px-2 py-0.5 text-sm font-mono text-gray-300 cursor-pointer select-none hover:bg-white/5 transition-colors"
-                onClick={() => setIsOpen(!isOpen)}
-            >
-                <svg
-                    width="10"
-                    height="10"
-                    viewBox="0 0 10 10"
-                    fill="currentColor"
-                    className={`text-gray-500 transition-transform duration-150 ${isOpen ? "rotate-90" : ""}`}
-                >
-                    <path d="M3 2l4 3-4 3V2z" />
-                </svg>
-                <span>projects</span>
-            </div>
-
-            {isOpen && (
-                <>
-                    {/* "all_projects" entry */}
-                    <div
-                        className={`flex items-center gap-1.5 py-0.5 cursor-pointer select-none text-xs font-mono transition-colors duration-100 ${activeTab === "all_projects" ? "text-white bg-white/10" : "text-gray-400 hover:text-gray-200 hover:bg-white/5"}`}
-                        style={{ paddingLeft: "22px", paddingRight: "8px" }}
-                        onClick={() => onSelect("all_projects")}
-                    >
-                        <span className="w-2.5 shrink-0" />
-                        all_projects
-                    </div>
-
-                    {/* "my_projects" folder */}
-                    <div
-                        className="flex items-center gap-1.5 py-0.5 cursor-pointer select-none text-xs font-mono text-gray-400 hover:text-gray-200 hover:bg-white/5 transition-colors"
-                        style={{ paddingLeft: "22px", paddingRight: "8px" }}
-                        onClick={() => setIsMyProjectsOpen(!isMyProjectsOpen)}
-                    >
-                        <svg
-                            width="10"
-                            height="10"
-                            viewBox="0 0 10 10"
-                            fill="currentColor"
-                            className={`text-gray-500 transition-transform duration-150 ${isMyProjectsOpen ? "rotate-90" : ""}`}
-                        >
-                            <path d="M3 2l4 3-4 3V2z" />
-                        </svg>
-                        my_projects
-                    </div>
-
-                    {/* Individual repos */}
-                    {isMyProjectsOpen &&
-                        sidebarItems.map((item) => (
-                            <div
-                                key={item.id}
-                                className={`flex items-center gap-1.5 py-0.5 cursor-pointer select-none text-xs font-mono transition-colors duration-100 ${activeTab === item.id ? "text-white bg-white/10" : "text-gray-400 hover:text-gray-200 hover:bg-white/5"}`}
-                                style={{
-                                    paddingLeft: "36px",
-                                    paddingRight: "8px",
-                                }}
-                                onClick={() => onSelect(item.id)}
-                            >
-                                <span className="w-2.5 shrink-0" />
-                                {item.label}
-                            </div>
-                        ))}
-                </>
-            )}
-        </div>
-    );
-};
-
 /* ── Main section ── */
 const ProjectsSection = () => {
     const [repos, setRepos] = useState<Repo[]>([]);
-    const [openTabs, setOpenTabs] = useState<{ id: string; label: string }[]>([
-        { id: "all_projects", label: "all_projects" },
+    const [openTabs, setOpenTabs] = useState<Tab[]>([
+        { id: "all_projects", label: "all_projects", closable: false },
     ]);
     const [activeTab, setActiveTab] = useState<string>("all_projects");
     const [loading, setLoading] = useState(true);
@@ -349,10 +265,29 @@ const ProjectsSection = () => {
             .finally(() => setLoading(false));
     }, []);
 
-    /* Sidebar items */
-    const sidebarItems = loading
-        ? []
-        : repos.map((r) => ({ id: r.name, label: r.name }));
+    /* Sidebar tree structure */
+    const projectsTree: TreeNode[] = [
+        {
+            id: "projects",
+            label: "projects",
+            type: "folder",
+            defaultOpen: true,
+            children: [
+                { id: "all_projects", label: "all_projects", type: "file" },
+                {
+                    id: "my_projects",
+                    label: "my_projects",
+                    type: "folder",
+                    defaultOpen: true,
+                    children: repos.map((r) => ({
+                        id: r.name,
+                        label: r.name,
+                        type: "file",
+                    })),
+                },
+            ],
+        },
+    ];
 
     const totalPages = Math.ceil(repos.length / ITEMS_PER_PAGE);
     const displayRepos = repos.slice(
@@ -363,7 +298,7 @@ const ProjectsSection = () => {
     const handleSelect = (id: string) => {
         setOpenTabs((prev) => {
             if (prev.find((t) => t.id === id)) return prev;
-            return [...prev, { id, label: id }];
+            return [...prev, { id, label: id, closable: id !== "all_projects" }];
         });
         setActiveTab(id);
         setShowSidebar(false);
@@ -390,17 +325,6 @@ const ProjectsSection = () => {
             className="flex flex-col"
             style={{ height: "100vh" }}
         >
-            <style>
-                {`
-                @keyframes window-open {
-                    0% { opacity: 0; transform: scale(0.95); }
-                    100% { opacity: 1; transform: scale(1); }
-                }
-                .animate-window-open {
-                    animation: window-open 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-                }
-                `}
-            </style>
             {/* ── Mobile toolbar ── */}
             <div
                 className="flex md:hidden items-center justify-between px-3 py-1.5 shrink-0"
@@ -457,9 +381,9 @@ const ProjectsSection = () => {
                     >
                         explorer
                     </div>
-                    <SidebarContent
-                        activeTab={activeTab}
-                        sidebarItems={sidebarItems}
+                    <FileTree
+                        tree={projectsTree}
+                        activeFile={activeTab}
                         onSelect={handleSelect}
                     />
                 </div>
@@ -486,9 +410,9 @@ const ProjectsSection = () => {
                     >
                         explorer
                     </div>
-                    <SidebarContent
-                        activeTab={activeTab}
-                        sidebarItems={sidebarItems}
+                    <FileTree
+                        tree={projectsTree}
+                        activeFile={activeTab}
                         onSelect={handleSelect}
                     />
                 </div>
@@ -498,134 +422,100 @@ const ProjectsSection = () => {
                     className="flex flex-col flex-1 overflow-hidden"
                     style={{ background: "rgba(10,8,22,0.55)" }}
                 >
-                    {/* Tab bar */}
-                    <div
-                        className="flex items-stretch shrink-0 overflow-x-auto"
-                        style={{
-                            borderBottom: "1px solid rgba(255,255,255,0.07)",
-                        }}
+                    <EditorPanel
+                        tabs={openTabs}
+                        activeTab={activeTab}
+                        onTabClose={handleTabClose}
+                        onTabSelect={setActiveTab}
                     >
-                        {openTabs.map((tab) => (
-                            <div
-                                key={tab.id}
-                                onClick={() => setActiveTab(tab.id)}
-                                className={`flex items-center gap-2 px-4 py-2 text-xs font-mono cursor-pointer border-r border-white/10 shrink-0 transition-colors duration-100 ${
-                                    activeTab === tab.id
-                                        ? "text-white bg-white/5"
-                                        : "text-gray-500 hover:text-gray-300 hover:bg-white/[0.03]"
-                                }`}
-                            >
-                                <span>{tab.label}</span>
-                                {tab.id !== "all_projects" && (
-                                    <button
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            handleTabClose(tab.id);
-                                        }}
-                                        className="text-gray-500 hover:text-white hover:bg-white/[0.08] transition-colors ml-1 w-6 h-5 flex items-center justify-center rounded-none"
-                                        style={{
-                                            border: "1px solid transparent",
-                                        }}
-                                        onMouseEnter={(e) =>
-                                            (e.currentTarget.style.border =
-                                                "1px solid rgba(255,255,255,0.1)")
-                                        }
-                                        onMouseLeave={(e) =>
-                                            (e.currentTarget.style.border =
-                                                "1px solid transparent")
-                                        }
-                                        aria-label={`Close ${tab.label}`}
-                                    >
-                                        ×
-                                    </button>
-                                )}
-                            </div>
-                        ))}
-                    </div>
+                        <div className="p-3 sm:p-5 h-full">
+                            {error && (
+                                <p className="text-gray-500 font-mono text-sm">
+                                    // failed to load repos from GitHub
+                                </p>
+                            )}
 
-                    {/* Content */}
-                    <div className="flex-1 overflow-y-auto p-3 sm:p-5">
-                        {error && (
-                            <p className="text-gray-500 font-mono text-sm">
-                                // failed to load repos from GitHub
-                            </p>
-                        )}
-
-                        {activeTab === "all_projects" ? (
-                            loading ? (
-                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                                    {Array.from({ length: 6 }).map((_, i) => (
-                                        <Skeleton key={i} />
-                                    ))}
-                                </div>
-                            ) : (
-                                <>
-                                    <div
-                                        key={currentPage}
-                                        className={`grid gap-4 animate-window-open grid-cols-1 sm:grid-cols-2 lg:grid-cols-3`}
-                                    >
-                                        {displayRepos.map((repo) => (
-                                            <ProjectCard
-                                                key={repo.id}
-                                                repo={repo}
-                                                onClick={() =>
-                                                    handleSelect(repo.name)
-                                                }
-                                            />
-                                        ))}
+                            {activeTab === "all_projects" ? (
+                                loading ? (
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                                        {Array.from({ length: 6 }).map(
+                                            (_, i) => (
+                                                <Skeleton key={i} />
+                                            ),
+                                        )}
                                     </div>
-
-                                    {totalPages > 1 && (
-                                        <div className="flex justify-center items-center gap-4 mt-6">
-                                            <button
-                                                onClick={() =>
-                                                    setCurrentPage((p) =>
-                                                        Math.max(1, p - 1),
-                                                    )
-                                                }
-                                                disabled={currentPage === 1}
-                                                className="px-3 py-1 text-sm font-mono text-gray-400 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors rounded-none bg-white/5 border border-white/10"
-                                            >
-                                                prev
-                                            </button>
-                                            <span className="text-sm font-mono text-gray-500">
-                                                {currentPage} / {totalPages}
-                                            </span>
-                                            <button
-                                                onClick={() =>
-                                                    setCurrentPage((p) =>
-                                                        Math.min(
-                                                            totalPages,
-                                                            p + 1,
-                                                        ),
-                                                    )
-                                                }
-                                                disabled={
-                                                    currentPage === totalPages
-                                                }
-                                                className="px-3 py-1 text-sm font-mono text-gray-400 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors rounded-none bg-white/5 border border-white/10"
-                                            >
-                                                next
-                                            </button>
+                                ) : (
+                                    <>
+                                        <div
+                                            key={currentPage}
+                                            className={`grid gap-4 animate-window-open grid-cols-1 sm:grid-cols-2 lg:grid-cols-3`}
+                                        >
+                                            {displayRepos.map((repo) => (
+                                                <ProjectCard
+                                                    key={repo.id}
+                                                    repo={repo}
+                                                    onClick={() =>
+                                                        handleSelect(repo.name)
+                                                    }
+                                                />
+                                            ))}
                                         </div>
+
+                                        {totalPages > 1 && (
+                                            <div className="flex justify-center items-center gap-4 mt-6">
+                                                <button
+                                                    onClick={() =>
+                                                        setCurrentPage((p) =>
+                                                            Math.max(1, p - 1),
+                                                        )
+                                                    }
+                                                    disabled={currentPage === 1}
+                                                    className="px-3 py-1 text-sm font-mono text-gray-400 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors rounded-none bg-white/5 border border-white/10"
+                                                >
+                                                    prev
+                                                </button>
+                                                <span className="text-sm font-mono text-gray-500">
+                                                    {currentPage} / {totalPages}
+                                                </span>
+                                                <button
+                                                    onClick={() =>
+                                                        setCurrentPage((p) =>
+                                                            Math.min(
+                                                                totalPages,
+                                                                p + 1,
+                                                            ),
+                                                        )
+                                                    }
+                                                    disabled={
+                                                        currentPage ===
+                                                        totalPages
+                                                    }
+                                                    className="px-3 py-1 text-sm font-mono text-gray-400 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors rounded-none bg-white/5 border border-white/10"
+                                                >
+                                                    next
+                                                </button>
+                                            </div>
+                                        )}
+                                    </>
+                                )
+                            ) : (
+                                <div className="flex w-full h-full text-gray-500 font-mono text-sm items-start">
+                                    {/* Details for single project */}
+                                    {repos.find(
+                                        (r) => r.name === activeTab,
+                                    ) && (
+                                        <ProjectDetail
+                                            repo={
+                                                repos.find(
+                                                    (r) => r.name === activeTab,
+                                                )!
+                                            }
+                                        />
                                     )}
-                                </>
-                            )
-                        ) : (
-                            <div className="flex w-full h-full text-gray-500 font-mono text-sm animate-window-open items-start">
-                                {/* Details for single project */}
-                                {repos.find((r) => r.name === activeTab) && (
-                                    <ProjectDetail
-                                        repo={
-                                            repos.find(
-                                                (r) => r.name === activeTab,
-                                            )!
-                                        }
-                                    />
-                                )}
-                            </div>
-                        )}
-                    </div>
+                                </div>
+                            )}
+                        </div>
+                    </EditorPanel>
                 </div>
             </div>
         </section>
