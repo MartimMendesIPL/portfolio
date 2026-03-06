@@ -128,7 +128,7 @@ const ContactSection = () => {
         <section
             id="contact"
             className="flex flex-col"
-            style={{ height: "100vh", paddingTop: "56px" }}
+            style={{ height: "100vh" }}
         >
             <style>
                 {`

@@ -9,6 +9,7 @@ html {
     scrollbar-width: none;
     scroll-snap-type: y mandatory;
     scroll-behavior: smooth;
+    scroll-padding-top: 56px;
     background: #0a0814;
 }
 html::-webkit-scrollbar {

@@ -388,7 +388,7 @@ const ProjectsSection = () => {
         <section
             id="projects"
             className="flex flex-col"
-            style={{ minHeight: "100vh", paddingTop: "56px" }}
+            style={{ height: "100vh" }}
         >
             <style>
                 {`

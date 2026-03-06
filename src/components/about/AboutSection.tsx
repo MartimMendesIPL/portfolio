@@ -52,9 +52,7 @@ const AboutSection = () => {
             id="about"
             className="flex flex-col"
             style={{
-                minHeight: "100vh",
                 height: "100vh",
-                paddingTop: "56px",
             }}
         >
             {/* Mobile toolbar */}
