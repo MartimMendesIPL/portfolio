@@ -54,7 +54,7 @@ const EditorPanel = ({
                             ${
                                 activeTab === tab.id
                                     ? "text-white bg-white/5"
-                                    : "text-gray-500 hover:text-gray-300 hover:bg-white/[0.03]"
+                                    : "text-gray-500 hover:text-gray-300 hover:bg-white/3"
                             }`}
                     >
                         <span>{tab.label}</span>
@@ -64,7 +64,7 @@ const EditorPanel = ({
                                     e.stopPropagation();
                                     onTabClose(tab.id);
                                 }}
-                                className="text-gray-500 hover:text-white hover:bg-white/[0.08] transition-colors ml-1 w-6 h-5 flex items-center justify-center rounded-none"
+                                className="text-gray-500 hover:text-white hover:bg-white/8 transition-colors ml-1 w-6 h-5 flex items-center justify-center rounded-none"
                                 style={{ border: "1px solid transparent" }}
                                 onMouseEnter={(e) =>
                                     (e.currentTarget.style.border =

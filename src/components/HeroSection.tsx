@@ -7,7 +7,7 @@ const HeroSection = () => {
             className="relative flex flex-col h-full px-6 pb-16 items-center overflow-hidden"
         >
             {/* Hero text content - centered in remaining space */}
-            <div className="relative z-[2] max-w-lg text-center flex-1 flex flex-col justify-center">
+            <div className="relative z-2 max-w-lg text-center flex-1 flex flex-col justify-center">
                 <h1
                     className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white leading-tight tracking-tight"
                     style={{ fontFamily: "monospace" }}
