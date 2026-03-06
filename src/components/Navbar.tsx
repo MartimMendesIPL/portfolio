@@ -34,7 +34,7 @@ const Navbar = ({ activeSection = "home" }: NavbarProps) => {
 
     return (
         <nav
-            className="fixed top-0 left-0 right-0 z-50 h-14"
+            className="top-0 left-0 right-0 z-50 h-14 shrink-0"
             style={{
                 background: "rgba(10, 8, 20, 0.92)",
                 backdropFilter: "blur(8px)",

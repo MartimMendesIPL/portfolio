@@ -27,7 +27,7 @@ const socialLinks = [
 const BottomBar = () => {
     return (
         <div
-            className="fixed bottom-0 left-0 right-0 z-50 flex items-center justify-between h-12 px-4"
+            className="bottom-0 left-0 right-0 z-50 flex items-center justify-between h-12 px-4 shrink-0"
             style={{
                 background: "rgba(10, 8, 20, 0.9)",
                 backdropFilter: "blur(8px)",

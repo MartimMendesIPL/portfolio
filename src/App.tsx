@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Navbar from "./components/Navbar";
 import HeroSection from "./components/HeroSection";
 import BottomBar from "./components/BottomBar";
@@ -11,9 +11,11 @@ const SECTIONS = ["home", "about", "projects", "contact"];
 
 function App() {
     const [activeSection, setActiveSection] = useState("home");
+    const scrollContainerRef = useRef<HTMLElement>(null);
 
     useEffect(() => {
         const observers: IntersectionObserver[] = [];
+        const scrollContainer = scrollContainerRef.current;
 
         SECTIONS.forEach((id) => {
             const el = document.getElementById(id);
@@ -22,7 +24,10 @@ function App() {
                 ([entry]) => {
                     if (entry.isIntersecting) setActiveSection(id);
                 },
-                { threshold: 0.4 },
+                { 
+                    threshold: 0.5,
+                    root: scrollContainer
+                },
             );
             observer.observe(el);
             observers.push(observer);
@@ -32,16 +37,9 @@ function App() {
     }, []);
 
     return (
-        <div
-            style={{
-                position: "relative",
-                fontFamily: "Inter, sans-serif",
-                minHeight: "100vh",
-                background: "#0a0814",
-            }}
-        >
-            {/* Waves fills the entire page background */}
-            <div style={{ position: "fixed", inset: 0, zIndex: 0 }}>
+        <div className="h-screen flex flex-col bg-[#0a0814] relative overflow-hidden">
+            {/* Waves fills the entire background */}
+            <div className="fixed inset-0 z-0 pointer-events-none">
                 <Waves
                     lineColor="rgba(168, 85, 247, 0.2)"
                     backgroundColor="transparent"
@@ -57,14 +55,21 @@ function App() {
                 />
             </div>
 
-            <div style={{ position: "relative", zIndex: 1 }}>
-                <Navbar activeSection={activeSection} />
-                <HeroSection />
-                <AboutSection />
-                <ProjectsSection />
-                <ContactSection />
-                <BottomBar />
-            </div>
+            {/* Content layout */}
+            <Navbar activeSection={activeSection} />
+            
+            <main 
+                ref={scrollContainerRef}
+                className="flex-1 overflow-y-auto snap-container relative z-10"
+                id="main-scroll-container"
+            >
+                <div className="snap-section"><HeroSection /></div>
+                <div className="snap-section"><AboutSection /></div>
+                <div className="snap-section"><ProjectsSection /></div>
+                <div className="snap-section"><ContactSection /></div>
+            </main>
+
+            <BottomBar />
         </div>
     );
 }

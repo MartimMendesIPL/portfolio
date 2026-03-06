@@ -5,26 +5,28 @@
 
 @custom-variant dark (&:is(.dark *));
 
-html {
-    scrollbar-width: none;
-    scroll-snap-type: y mandatory;
-    scroll-behavior: smooth;
-    scroll-padding-top: 56px;
+html, body, #root {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
     background: #0a0814;
 }
-html::-webkit-scrollbar {
-    display: none; /* Chrome, Safari */
+
+.snap-container {
+    scroll-snap-type: y mandatory;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+}
+.snap-container::-webkit-scrollbar {
+    display: none;
 }
 
-body {
-    margin: 0;
-    overflow-x: hidden;
-}
-
-/* Each full-page section snaps into view */
-section[id] {
+.snap-section {
     scroll-snap-align: start;
     scroll-snap-stop: always;
+    height: 100%;
+    width: 100%;
 }
 
 @theme inline {

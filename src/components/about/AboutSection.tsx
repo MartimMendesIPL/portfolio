@@ -74,10 +74,7 @@ const AboutSection = () => {
     return (
         <section
             id="about"
-            className="flex flex-col"
-            style={{
-                height: "100vh",
-            }}
+            className="flex flex-col h-full"
         >
             {/* Mobile toolbar */}
             <div

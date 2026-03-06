@@ -322,8 +322,7 @@ const ProjectsSection = () => {
     return (
         <section
             id="projects"
-            className="flex flex-col"
-            style={{ height: "100vh" }}
+            className="flex flex-col h-full"
         >
             {/* ── Mobile toolbar ── */}
             <div
@@ -335,13 +334,11 @@ const ProjectsSection = () => {
             >
                 <button
                     onClick={() => setShowSidebar((o) => !o)}
-                    className="flex items-center gap-1.5 text-xs font-mono text-gray-400 hover:text-white transition-colors px-2 py-1 rounded-none"
-                    style={{
-                        background: showSidebar
-                            ? "rgba(255,255,255,0.08)"
-                            : "transparent",
-                        border: "1px solid rgba(255,255,255,0.08)",
-                    }}
+                    className={`flex items-center gap-1.5 text-xs font-mono transition-all duration-200 px-2.5 py-1 rounded-none border ${
+                        showSidebar
+                            ? "text-blue-400 bg-blue-500/10 border-blue-500/30"
+                            : "text-gray-400 bg-transparent border-white/10 hover:text-white hover:bg-white/5"
+                    }`}
                 >
                     <svg
                         width="12"
