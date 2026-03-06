@@ -141,7 +141,7 @@ const SkillsPanel = ({ tab, onClose }: SkillsPanelProps) => (
     <div className="flex flex-col h-full overflow-hidden">
         {/* Tab bar */}
         <div className="flex items-stretch shrink-0 border-b border-white/10">
-            <div className="flex items-center gap-2 px-4 py-2 text-sm font-mono text-white bg-white/5 border-r border-white/10 cursor-default">
+            <div className="flex items-center gap-2 px-4 py-2 text-xs font-mono text-white bg-white/5 border-r border-white/10 cursor-default">
                 <span>{tab}</span>
                 <button
                     onClick={onClose}

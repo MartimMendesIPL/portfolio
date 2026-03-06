@@ -89,13 +89,11 @@ const AboutSection = () => {
             >
                 <button
                     onClick={() => setShowSidebar((o) => !o)}
-                    className="flex items-center gap-1.5 text-xs font-mono text-gray-400 hover:text-white transition-colors px-2 py-1 rounded"
-                    style={{
-                        background: showSidebar
-                            ? "rgba(255,255,255,0.08)"
-                            : "transparent",
-                        border: "1px solid rgba(255,255,255,0.08)",
-                    }}
+                    className={`flex items-center gap-1.5 text-xs font-mono transition-all duration-200 px-2.5 py-1 rounded-none ${
+                        showSidebar
+                            ? "text-blue-400 bg-blue-500/10 border-blue-500/30"
+                            : "text-gray-400 bg-transparent border-white/10 hover:text-white hover:bg-white/5"
+                    }`}
                 >
                     <svg
                         width="12"
@@ -103,7 +101,7 @@ const AboutSection = () => {
                         viewBox="0 0 24 24"
                         fill="none"
                         stroke="currentColor"
-                        strokeWidth="2"
+                        strokeWidth="2.5"
                         strokeLinecap="round"
                         strokeLinejoin="round"
                     >
@@ -114,13 +112,11 @@ const AboutSection = () => {
 
                 <button
                     onClick={() => setShowSkills((o) => !o)}
-                    className="flex items-center gap-1.5 text-xs font-mono text-gray-400 hover:text-white transition-colors px-2 py-1 rounded"
-                    style={{
-                        background: showSkills
-                            ? "rgba(255,255,255,0.08)"
-                            : "transparent",
-                        border: "1px solid rgba(255,255,255,0.08)",
-                    }}
+                    className={`flex items-center gap-1.5 text-xs font-mono transition-all duration-200 px-2.5 py-1 rounded-none ${
+                        showSkills
+                            ? "text-purple-400 bg-purple-500/10 border-purple-500/30"
+                            : "text-gray-400 bg-transparent border-white/10 hover:text-white hover:bg-white/5"
+                    }`}
                 >
                     <svg
                         width="12"
@@ -128,7 +124,7 @@ const AboutSection = () => {
                         viewBox="0 0 24 24"
                         fill="none"
                         stroke="currentColor"
-                        strokeWidth="2"
+                        strokeWidth="2.5"
                         strokeLinecap="round"
                         strokeLinejoin="round"
                     >
@@ -197,12 +193,36 @@ const AboutSection = () => {
                     }}
                 >
                     <div
-                        className="px-3 py-2 text-sm font-mono text-gray-500 tracking-widest uppercase select-none shrink-0"
+                        className="px-3 py-2 text-sm font-mono text-gray-500 tracking-widest uppercase select-none shrink-0 flex items-center justify-between"
                         style={{
                             borderBottom: "1px solid rgba(255,255,255,0.05)",
                         }}
                     >
-                        explorer
+                        <span>explorer</span>
+                        <button
+                            onClick={() => setShowSkills(!showSkills)}
+                            className={`flex items-center gap-1.5 px-2 py-0.5 transition-all duration-200 rounded-none text-[10px] uppercase tracking-wider font-mono ${
+                                showSkills
+                                    ? "text-purple-400 bg-purple-500/10 border-purple-500/30"
+                                    : "text-gray-500 bg-transparent border-transparent hover:text-gray-300 hover:bg-white/5"
+                            }`}
+                            title={showSkills ? "Hide Skills" : "Show Skills"}
+                        >
+                            <svg
+                                width="10"
+                                height="10"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="3"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                            >
+                                <polyline points="16 18 22 12 16 6" />
+                                <polyline points="8 6 2 12 8 18" />
+                            </svg>
+                            <span>skills</span>
+                        </button>
                     </div>
                     <FileTree
                         tree={ABOUT_TREE}
