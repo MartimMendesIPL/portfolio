@@ -1,8 +1,22 @@
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import FileTree, { type TreeNode } from "../FileTree";
 import EditorPanel, { type Tab } from "../EditorPanel";
 import SkillsPanel from "./SkillsPanel";
-import { CONTENT_MAP } from "./AboutContent";
+import {
+    BioContent,
+    InterestsContent,
+    ExperienceContent,
+    UniversityContent,
+    CertificationsContent,
+} from "./AboutContent";
+
+const CONTENT_MAP: Record<string, ReactNode> = {
+    bio: <BioContent />,
+    interests: <InterestsContent />,
+    experience: <ExperienceContent />,
+    university: <UniversityContent />,
+    certifications: <CertificationsContent />,
+};
 
 const ABOUT_TREE: TreeNode[] = [
     {

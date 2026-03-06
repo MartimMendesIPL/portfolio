@@ -1,4 +1,3 @@
-import type { ReactNode } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faGamepad,
@@ -189,7 +188,7 @@ export const CertificationsContent = () => (
         ].map((cert, i) => (
             <div
                 key={i}
-                className="border border-white/5 rounded px-3 py-2 bg-white/[0.02] flex items-start gap-3"
+                className="border border-white/5 rounded px-3 py-2 bg-white/2 flex items-start gap-3"
             >
                 <FontAwesomeIcon
                     icon={cert.icon}
@@ -205,11 +204,3 @@ export const CertificationsContent = () => (
         ))}
     </div>
 );
-
-export const CONTENT_MAP: Record<string, ReactNode> = {
-    bio: <BioContent />,
-    interests: <InterestsContent />,
-    experience: <ExperienceContent />,
-    university: <UniversityContent />,
-    certifications: <CertificationsContent />,
-};
