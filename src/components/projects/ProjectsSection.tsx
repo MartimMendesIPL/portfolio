@@ -17,6 +17,25 @@ interface Repo {
 const GITHUB_USER = "MartimMendesIPL";
 const EXCLUDED = new Set([GITHUB_USER]);
 
+const CACHE_KEY = `portfolio:github_repos:${GITHUB_USER}:v1`;
+const CACHE_TTL_MS = 1000 * 60 * 60 * 6; // 6 hours
+
+type RepoCache = { ts: number; repos: Repo[] };
+
+const readReposCache = (): Repo[] | null => {
+    if (typeof window === "undefined") return null;
+    try {
+        const raw = window.localStorage.getItem(CACHE_KEY);
+        if (!raw) return null;
+        const parsed = JSON.parse(raw) as RepoCache;
+        if (!parsed?.ts || !Array.isArray(parsed.repos)) return null;
+        if (Date.now() - parsed.ts > CACHE_TTL_MS) return null;
+        return parsed.repos;
+    } catch {
+        return null;
+    }
+};
+
 /* ── Single project card ── */
 const ProjectCard = ({
     repo,
@@ -241,29 +260,59 @@ const Skeleton = () => (
 
 /* ── Main section ── */
 const ProjectsSection = () => {
-    const [repos, setRepos] = useState<Repo[]>([]);
+    const [initialCache] = useState<Repo[] | null>(() => readReposCache());
+    const [repos, setRepos] = useState<Repo[]>(() => initialCache ?? []);
     const [openTabs, setOpenTabs] = useState<Tab[]>([
         { id: "all_projects", label: "all_projects", closable: false },
     ]);
     const [activeTab, setActiveTab] = useState<string>("all_projects");
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState<boolean>(() => initialCache === null);
     const [error, setError] = useState(false);
     const [showSidebar, setShowSidebar] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const ITEMS_PER_PAGE = 6;
 
     useEffect(() => {
+        const controller = new AbortController();
+        const didUseCache = initialCache !== null;
+
         fetch(
             `https://api.github.com/users/${GITHUB_USER}/repos?sort=updated&per_page=100`,
+            {
+                signal: controller.signal,
+                headers: {
+                    Accept: "application/vnd.github+json",
+                },
+            },
         )
-            .then((r) => r.json())
+            .then((r) => {
+                if (!r.ok) throw new Error(`GitHub fetch failed: ${r.status}`);
+                return r.json();
+            })
             .then((data: Repo[]) => {
                 const filtered = data.filter((r) => !EXCLUDED.has(r.name));
                 setRepos(filtered);
+                try {
+                    const cache: RepoCache = { ts: Date.now(), repos: filtered };
+                    window.localStorage.setItem(CACHE_KEY, JSON.stringify(cache));
+                } catch {
+                    // Cache write is best-effort.
+                }
             })
-            .catch(() => setError(true))
+            .catch((err) => {
+                if (err?.name === "AbortError") return;
+                // If we have cached data, prefer keeping UI usable.
+                if (!didUseCache) setError(true);
+            })
             .finally(() => setLoading(false));
-    }, []);
+
+        return () => controller.abort();
+    }, [initialCache]);
+
+    useEffect(() => {
+        const totalPages = Math.ceil(repos.length / ITEMS_PER_PAGE);
+        if (totalPages > 0 && currentPage > totalPages) setCurrentPage(1);
+    }, [repos.length]);
 
     /* Sidebar tree structure */
     const projectsTree: TreeNode[] = [
@@ -324,6 +373,7 @@ const ProjectsSection = () => {
             id="projects"
             className="flex flex-col h-full"
         >
+            <h2 className="sr-only">Projects</h2>
             {/* ── Mobile toolbar ── */}
             <div
                 className="flex md:hidden items-center justify-between px-3 py-1.5 shrink-0"

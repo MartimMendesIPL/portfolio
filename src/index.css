@@ -147,3 +147,17 @@ html, body, #root {
         @apply bg-background text-foreground;
     }
 }
+
+@media (prefers-reduced-motion: reduce) {
+    .snap-container {
+        scroll-behavior: auto;
+    }
+
+    .animate-window-open {
+        animation: none !important;
+    }
+
+    .animate-pulse {
+        animation: none !important;
+    }
+}

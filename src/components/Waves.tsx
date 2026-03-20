@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import type { CSSProperties } from "react";
 import "./Waves.css";
 
@@ -149,6 +149,27 @@ interface WavesProps {
     className?: string;
 }
 
+const usePrefersReducedMotion = () => {
+    const [reduced, setReduced] = useState(false);
+
+    useEffect(() => {
+        const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+        const update = () => setReduced(mq.matches);
+        update();
+
+        if (mq.addEventListener) {
+            mq.addEventListener("change", update);
+            return () => mq.removeEventListener("change", update);
+        }
+
+        // Safari fallback.
+        mq.addListener(update);
+        return () => mq.removeListener(update);
+    }, []);
+
+    return reduced;
+};
+
 const Waves: React.FC<WavesProps> = ({
     lineColor = "black",
     backgroundColor = "transparent",
@@ -208,6 +229,7 @@ const Waves: React.FC<WavesProps> = ({
         yGap,
     });
     const frameIdRef = useRef<number | null>(null);
+    const prefersReducedMotion = usePrefersReducedMotion();
 
     useEffect(() => {
         configRef.current = {
@@ -236,6 +258,8 @@ const Waves: React.FC<WavesProps> = ({
     ]);
 
     useEffect(() => {
+        if (prefersReducedMotion) return;
+
         const canvas = canvasRef.current;
         const container = containerRef.current;
         if (!canvas || !container) return;
@@ -424,7 +448,7 @@ const Waves: React.FC<WavesProps> = ({
                 cancelAnimationFrame(frameIdRef.current);
             }
         };
-    }, []);
+    }, [prefersReducedMotion]);
 
     return (
         <div

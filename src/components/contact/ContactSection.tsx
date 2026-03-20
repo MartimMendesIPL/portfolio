@@ -33,6 +33,7 @@ const Field = ({
     <div className="flex flex-col gap-2">
         {/* comment-style label */}
         <label
+            htmlFor={`contact-${String(name)}`}
             className="text-sm font-mono"
             style={{ color: "rgba(192,132,252,0.9)" }}
         >
@@ -40,6 +41,8 @@ const Field = ({
         </label>
         {multiline ? (
             <textarea
+                id={`contact-${String(name)}`}
+                name={String(name)}
                 value={value}
                 onChange={(e) => onChange(name, e.target.value)}
                 disabled={disabled}
@@ -61,6 +64,8 @@ const Field = ({
             />
         ) : (
             <input
+                id={`contact-${String(name)}`}
+                name={String(name)}
                 type={type}
                 value={value}
                 onChange={(e) => onChange(name, e.target.value)}
@@ -94,7 +99,7 @@ const ContactSection = () => {
     });
     const [status, setStatus] = useState<FormState>("idle");
     const [openTabs, setOpenTabs] = useState<Tab[]>([
-        { id: "send_a_message", label: "send_a_message" },
+        { id: "send_a_message", label: "send_a_message", closable: false },
     ]);
     const [activeTab, setActiveTab] = useState<string>("send_a_message");
     const [showSidebar, setShowSidebar] = useState(false);
@@ -169,6 +174,7 @@ const ContactSection = () => {
             id="contact"
             className="flex flex-col h-full"
         >
+            <h2 className="sr-only">Contact</h2>
             {/* ── Mobile toolbar ── */}
             <div
                 className="flex md:hidden items-center justify-between px-3 py-1.5 shrink-0"
@@ -357,7 +363,11 @@ const ContactSection = () => {
                                             />
 
                                             {status === "error" && (
-                                                <p className="text-sm font-mono text-red-400">
+                                                <p
+                                                    className="text-sm font-mono text-red-400"
+                                                    role="status"
+                                                    aria-live="polite"
+                                                >
                                                     {
                                                         "// error sending — please try again"
                                                     }

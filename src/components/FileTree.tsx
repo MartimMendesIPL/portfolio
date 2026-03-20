@@ -35,8 +35,12 @@ const TreeItem = ({ node, depth, activeFile, onSelect }: TreeItemProps) => {
 
     return (
         <div>
-            <div
-                className={`flex items-center gap-1 py-0.5 px-2 cursor-pointer select-none text-sm font-mono transition-colors duration-100
+            <button
+                type="button"
+                role="treeitem"
+                aria-selected={isActive}
+                aria-expanded={isFolder ? open : undefined}
+                className={`flex items-center gap-1 py-0.5 px-2 select-none text-sm font-mono transition-colors duration-100 w-full text-left
                     ${isActive ? "text-white bg-white/10" : "text-gray-400 hover:text-gray-200 hover:bg-white/5"}`}
                 style={{ paddingLeft: `${8 + depth * 14}px` }}
                 onClick={() => {
@@ -46,18 +50,18 @@ const TreeItem = ({ node, depth, activeFile, onSelect }: TreeItemProps) => {
             >
                 {isFolder ? (
                     <>
-                        <span className="text-gray-500">
+                        <span className="text-gray-500" aria-hidden="true">
                             <ChevronIcon open={open} />
                         </span>
                         <span className="text-gray-300">{node.label}</span>
                     </>
                 ) : (
                     <>
-                        <span className="w-2.5" />
+                        <span className="w-2.5" aria-hidden="true" />
                         <span>{node.label}</span>
                     </>
                 )}
-            </div>
+            </button>
             {isFolder &&
                 open &&
                 node.children?.map((child) => (
@@ -81,7 +85,7 @@ export interface FileTreeProps {
 
 const FileTree = ({ tree, activeFile, onSelect }: FileTreeProps) => {
     return (
-        <div className="h-full overflow-y-auto pt-2 pb-4">
+        <div className="h-full overflow-y-auto pt-2 pb-4" role="tree" aria-label="File explorer">
             {tree.map((node) => (
                 <TreeItem
                     key={node.id}

@@ -48,8 +48,8 @@ const ABOUT_TREE: TreeNode[] = [
 
 const AboutSection = () => {
     const [openTabs, setOpenTabs] = useState<Tab[]>([
-        { id: "bio", label: "bio" },
-        { id: "experience", label: "experience" },
+        { id: "bio", label: "bio", closable: false },
+        { id: "experience", label: "experience", closable: false },
     ]);
     const [activeTab, setActiveTab] = useState<string>("bio");
     const [showSkills, setShowSkills] = useState(true);
@@ -90,6 +90,7 @@ const AboutSection = () => {
             id="about"
             className="flex flex-col h-full"
         >
+            <h2 className="sr-only">About</h2>
             {/* Mobile toolbar */}
             <div
                 className="flex md:hidden items-center justify-between px-3 py-1.5 shrink-0"

@@ -24,7 +24,12 @@ const scrollToSection = (
     e.preventDefault();
     const el = document.getElementById(sectionId);
     if (el) {
-        el.scrollIntoView({ behavior: "smooth" });
+        const prefersReducedMotion =
+            window.matchMedia?.("(prefers-reduced-motion: reduce)")
+                ?.matches ?? false;
+        el.scrollIntoView({
+            behavior: prefersReducedMotion ? "auto" : "smooth",
+        });
     }
     onDone?.();
 };
@@ -59,6 +64,7 @@ const Navbar = ({ activeSection = "home" }: NavbarProps) => {
                                 onClick={(e) =>
                                     scrollToSection(e, link.sectionId)
                                 }
+                                aria-current={isActive ? "page" : undefined}
                                 className={`flex items-center px-10 text-sm font-mono tracking-wider transition-colors duration-200 border-r border-white/10 relative
                                     ${isActive ? "text-white" : "text-gray-400 hover:text-white"}`}
                             >
@@ -78,6 +84,9 @@ const Navbar = ({ activeSection = "home" }: NavbarProps) => {
                 <a
                     href="#contact"
                     onClick={(e) => scrollToSection(e, "contact")}
+                    aria-current={
+                        activeSection === "contact" ? "page" : undefined
+                    }
                     className={`flex items-center px-8 text-sm font-mono tracking-wider transition-colors duration-200 border-l border-white/10 ml-auto relative
                         ${activeSection === "contact" ? "text-white" : "text-gray-400 hover:text-white"}`}
                 >
@@ -157,6 +166,9 @@ const Navbar = ({ activeSection = "home" }: NavbarProps) => {
                                         setMenuOpen(false),
                                     )
                                 }
+                                            aria-current={
+                                                isActive ? "page" : undefined
+                                            }
                                 className={`px-6 py-3 text-sm font-mono tracking-wider transition-colors duration-150 relative
                                         ${isActive ? "text-white" : "text-gray-400"}`}
                                 style={{

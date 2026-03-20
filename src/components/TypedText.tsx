@@ -2,13 +2,45 @@ import { useEffect, useRef, useState } from "react";
 
 const PHRASES = ["Programmer", "Prompt Engineer", "Vibe Coder"];
 
+const usePrefersReducedMotion = () => {
+    const [reduced, setReduced] = useState(false);
+
+    useEffect(() => {
+        const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+        const update = () => setReduced(mq.matches);
+        update();
+
+        if (mq.addEventListener) {
+            mq.addEventListener("change", update);
+            return () => mq.removeEventListener("change", update);
+        }
+
+        // Safari fallback.
+        mq.addListener(update);
+        return () => mq.removeListener(update);
+    }, []);
+
+    return reduced;
+};
+
 const TypedText = () => {
     const [displayed, setDisplayed] = useState("");
     const phraseIndex = useRef(0);
     const charIndex = useRef(0);
     const deleting = useRef(false);
+    const prefersReducedMotion = usePrefersReducedMotion();
 
     useEffect(() => {
+        if (prefersReducedMotion) {
+            setDisplayed(PHRASES[0]);
+            return;
+        }
+
+        // Reset when motion is allowed / re-enabled.
+        phraseIndex.current = 0;
+        charIndex.current = 0;
+        deleting.current = false;
+
         let timeout: ReturnType<typeof setTimeout>;
 
         const tick = () => {
@@ -40,14 +72,16 @@ const TypedText = () => {
 
         timeout = setTimeout(tick, 100);
         return () => clearTimeout(timeout);
-    }, []);
+    }, [prefersReducedMotion]);
 
     return (
         <p className="text-xl font-mono mt-2" style={{ color: "#a855f7" }}>
             {"> "}
             <span>{displayed}</span>
             <span
-                className="inline-block w-0.5 h-5 ml-0.5 align-middle animate-pulse"
+                className={`inline-block w-0.5 h-5 ml-0.5 align-middle ${
+                    prefersReducedMotion ? "" : "animate-pulse"
+                }`}
                 style={{ background: "#a855f7" }}
             />
         </p>
