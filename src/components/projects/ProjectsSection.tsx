@@ -235,22 +235,8 @@ const ProjectsSection = () => {
   const [loading, setLoading] = useState<boolean>(() => initialCache === null);
   const [error, setError] = useState(false);
   const [showSidebar, setShowSidebar] = useState(false);
-  const [currentPage, setCurrentPage] = useState(() => {
-    if (typeof window !== "undefined") {
-      const params = new URLSearchParams(window.location.search);
-      const page = params.get("page");
-      return page ? parseInt(page, 10) : 1;
-    }
-    return 1;
-  });
+  const [currentPage, setCurrentPage] = useState(1);
   const ITEMS_PER_PAGE = 6;
-
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    params.set("page", currentPage.toString());
-    const newUrl = `${window.location.pathname}?${params.toString()}`;
-    window.history.replaceState({}, "", newUrl);
-  }, [currentPage]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -336,14 +322,6 @@ const ProjectsSection = () => {
     setShowSidebar(false);
     if (id === "all_projects") {
       setCurrentPage(1);
-    } else {
-      const params = new URLSearchParams(window.location.search);
-      params.delete("page");
-      window.history.replaceState(
-        {},
-        "",
-        `${window.location.pathname}?${params.toString()}`,
-      );
     }
   };
 

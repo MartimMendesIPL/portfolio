@@ -1,0 +1,13 @@
+name = "portfolio"
+main = "src/worker.ts"
+compatibility_date = "2025-09-27"
+compatibility_flags = ["nodejs_compat"]
+
+assets = { directory = "./dist", not_found_handling = "single-page-application" }
+
+routes = [
+  { pattern = "martimmendes.dev", zone_name = "martimmendes.dev" },
+]
+
+[observability]
+enabled = true
