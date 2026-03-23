@@ -309,10 +309,8 @@ const ProjectsSection = () => {
         return () => controller.abort();
     }, [initialCache]);
 
-    useEffect(() => {
-        const totalPages = Math.ceil(repos.length / ITEMS_PER_PAGE);
-        if (totalPages > 0 && currentPage > totalPages) setCurrentPage(1);
-    }, [repos.length]);
+    const totalPages = Math.ceil(repos.length / ITEMS_PER_PAGE);
+    const safePage = Math.min(currentPage, Math.max(1, totalPages));
 
     /* Sidebar tree structure */
     const projectsTree: TreeNode[] = [
@@ -338,10 +336,9 @@ const ProjectsSection = () => {
         },
     ];
 
-    const totalPages = Math.ceil(repos.length / ITEMS_PER_PAGE);
     const displayRepos = repos.slice(
-        (currentPage - 1) * ITEMS_PER_PAGE,
-        currentPage * ITEMS_PER_PAGE,
+        (safePage - 1) * ITEMS_PER_PAGE,
+        safePage * ITEMS_PER_PAGE,
     );
 
     const handleSelect = (id: string) => {

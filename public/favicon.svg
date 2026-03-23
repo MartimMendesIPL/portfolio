@@ -1,60 +1,57 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
   <defs>
-    <radialGradient id="bg" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#1a1a2e"/>
-      <stop offset="100%" stop-color="#0d0d1a"/>
-    </radialGradient>
-    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#7c3aed"/>
-      <stop offset="100%" stop-color="#a855f7"/>
-    </linearGradient>
     <filter id="glow">
-      <feGaussianBlur stdDeviation="1.5" result="coloredBlur"/>
+      <feGaussianBlur stdDeviation="2.5" result="coloredBlur"/>
       <feMerge>
         <feMergeNode in="coloredBlur"/>
         <feMergeNode in="SourceGraphic"/>
       </feMerge>
     </filter>
+    <filter id="glow-strong">
+      <feGaussianBlur stdDeviation="5" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="bracket-glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="6" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <clipPath id="bounds">
+      <rect width="200" height="200" rx="20"/>
+    </clipPath>
   </defs>
 
   <!-- Background -->
-  <rect width="64" height="64" rx="12" fill="url(#bg)"/>
+  <rect width="200" height="200" fill="#09090f" rx="20"/>
 
-  <!-- Subtle dot grid (decorative, matching portfolio) -->
-  <g opacity="0.15" fill="#7c3aed">
-    <circle cx="10" cy="10" r="1"/>
-    <circle cx="18" cy="10" r="1"/>
-    <circle cx="10" cy="18" r="1"/>
-    <circle cx="18" cy="18" r="1"/>
-    <circle cx="10" cy="26" r="1"/>
-    <circle cx="18" cy="26" r="1"/>
+  <!-- Full-canvas waves -->
+  <g clip-path="url(#bounds)" fill="none">
+    <path d="M -10 30  C 20 10,  55 60,  90 38  S 148 5,   175 38  S 205 65,  215 55"  stroke="#5b21b6" stroke-width="1.5" opacity="0.5"/>
+    <path d="M -10 52  C 15 28,  58 80,  92 57  S 150 20,  176 55  S 206 84,  215 74"  stroke="#6d28d9" stroke-width="1.8" opacity="0.65"/>
+    <path d="M -10 76  C 10 48,  62 100, 94 78  S 150 40,  177 75  S 206 106, 215 96"  stroke="#7c3aed" stroke-width="2"   opacity="0.8"/>
+
+    <path d="M -10 100 C 8  68,  65 122, 96 98  S 151 58,  178 96  S 206 128, 215 118" stroke="#8b5cf6" stroke-width="3"   opacity="1" filter="url(#glow)"/>
+    <path d="M -10 114 C 8  82,  65 136, 96 112 S 151 72,  178 110 S 206 142, 215 132" stroke="#a855f7" stroke-width="4"   opacity="1" filter="url(#glow-strong)"/>
+    <path d="M -10 128 C 8  96,  65 150, 96 126 S 151 86,  178 124 S 206 156, 215 146" stroke="#8b5cf6" stroke-width="3"   opacity="1" filter="url(#glow)"/>
+
+    <path d="M -10 150 C 10 122, 63 170, 95 148 S 150 110, 178 146 S 206 176, 215 167" stroke="#7c3aed" stroke-width="2"   opacity="0.8"/>
+    <path d="M -10 170 C 15 144, 60 188, 93 168 S 149 132, 177 166 S 206 194, 215 186" stroke="#6d28d9" stroke-width="1.8" opacity="0.65"/>
+    <path d="M -10 188 C 18 164, 58 205, 92 186 S 148 152, 176 184 S 206 210, 215 203" stroke="#5b21b6" stroke-width="1.5" opacity="0.5"/>
   </g>
 
-  <!-- Terminal prompt ">" symbol -->
-  <text
-    x="7"
-    y="43"
-    font-family="'Courier New', monospace"
-    font-size="16"
-    font-weight="bold"
-    fill="url(#accent)"
-    filter="url(#glow)"
-  >&gt;</text>
-
-  <!-- "MM" monogram in monospace style -->
-  <text
-    x="22"
-    y="43"
-    font-family="'Courier New', monospace"
-    font-size="24"
-    font-weight="bold"
-    fill="#ffffff"
-    letter-spacing="-2"
-  >MM</text>
-
-  <!-- Blinking cursor bar -->
-  <rect x="55" y="22" width="4" height="18" rx="1" fill="url(#accent)" opacity="0.9" filter="url(#glow)"/>
-
-  <!-- Bottom accent line -->
-  <rect x="7" y="50" width="50" height="1.5" rx="1" fill="url(#accent)" opacity="0.5"/>
+  <!-- Brackets with white glow -->
+  <g filter="url(#bracket-glow)">
+    <!-- < -->
+    <polyline points="72,68 42,100 72,132" fill="none" stroke="white" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- / -->
+    <line x1="114" y1="60" x2="86" y2="140" stroke="white" stroke-width="9" stroke-linecap="round"/>
+    <!-- > -->
+    <polyline points="128,68 158,100 128,132" fill="none" stroke="white" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
 </svg>

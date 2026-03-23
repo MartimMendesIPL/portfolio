@@ -3,19 +3,20 @@ import { useEffect, useRef, useState } from "react";
 const PHRASES = ["Programmer", "Prompt Engineer", "Vibe Coder"];
 
 const usePrefersReducedMotion = () => {
-    const [reduced, setReduced] = useState(false);
+    const [reduced, setReduced] = useState(() => 
+        typeof window !== "undefined" && 
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    );
 
     useEffect(() => {
         const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
         const update = () => setReduced(mq.matches);
-        update();
 
         if (mq.addEventListener) {
             mq.addEventListener("change", update);
             return () => mq.removeEventListener("change", update);
         }
 
-        // Safari fallback.
         mq.addListener(update);
         return () => mq.removeListener(update);
     }, []);
@@ -24,7 +25,7 @@ const usePrefersReducedMotion = () => {
 };
 
 const TypedText = () => {
-    const [displayed, setDisplayed] = useState("");
+    const [displayed, setDisplayed] = useState(PHRASES[0]);
     const phraseIndex = useRef(0);
     const charIndex = useRef(0);
     const deleting = useRef(false);
@@ -32,11 +33,9 @@ const TypedText = () => {
 
     useEffect(() => {
         if (prefersReducedMotion) {
-            setDisplayed(PHRASES[0]);
             return;
         }
 
-        // Reset when motion is allowed / re-enabled.
         phraseIndex.current = 0;
         charIndex.current = 0;
         deleting.current = false;

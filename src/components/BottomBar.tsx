@@ -5,6 +5,7 @@ import {
     faLinkedinIn,
     faGithub,
 } from "@fortawesome/free-brands-svg-icons";
+import { faDownload } from "@fortawesome/free-solid-svg-icons";
 
 const socialLinks = [
     {
@@ -56,16 +57,26 @@ const BottomBar = () => {
                 ))}
             </div>
 
-            {/* Right — GitHub handle */}
-            <a
-                href="https://github.com/MartimMendesIPL"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 text-xs font-mono tracking-wider text-gray-400 hover:text-purple-400 transition-colors duration-200"
-            >
-                <FontAwesomeIcon icon={faGithub} size="lg" />
-                <span className="hidden sm:inline">@MartimMendesIPL</span>
-            </a>
+            {/* Right — CV + GitHub */}
+            <div className="flex items-center gap-3">
+                <a
+                    href="/cv.pdf"
+                    download
+                    className="flex items-center gap-1.5 text-xs font-mono tracking-wider text-gray-400 hover:text-purple-400 transition-colors duration-200"
+                >
+                    <FontAwesomeIcon icon={faDownload} size="lg" />
+                    <span className="hidden sm:inline">CV</span>
+                </a>
+                <a
+                    href="https://github.com/MartimMendesIPL"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 text-xs font-mono tracking-wider text-gray-400 hover:text-purple-400 transition-colors duration-200"
+                >
+                    <FontAwesomeIcon icon={faGithub} size="lg" />
+                    <span className="hidden sm:inline">@MartimMendesIPL</span>
+                </a>
+            </div>
         </div>
     );
 };

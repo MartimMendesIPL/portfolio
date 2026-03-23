@@ -21,7 +21,7 @@ const HeroSection = () => {
                     className="mt-5 text-xs sm:text-sm leading-relaxed font-mono max-w-xs sm:max-w-sm mx-auto"
                     style={{ color: "rgba(200, 190, 220, 0.75)" }}
                 >
-                    I'm a programming student.
+                    Full-stack developer.
                 </p>
             </div>
         </section>
