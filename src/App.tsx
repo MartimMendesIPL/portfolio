@@ -49,7 +49,7 @@ function App() {
   }, []);
 
   return (
-    <div className="h-screen flex flex-col bg-[#0a0814] relative overflow-hidden">
+    <div className="h-[100dvh] flex flex-col bg-[#0a0814] relative overflow-hidden">
       {/* Skip link for accessibility */}
       <a
         href="#main-content"
