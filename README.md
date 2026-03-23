@@ -1,6 +1,6 @@
 # Martim Mendes Portfolio
 
-A developer portfolio website showcasing projects, skills, and experience. Built with React, TypeScript, and Tailwind CSS, deployed on Cloudflare Pages.
+A developer portfolio website showcasing projects, skills, and experience. Built with React, TypeScript, and Tailwind CSS, deployed on Cloudflare Workers.
 
 ## Features
 
@@ -9,18 +9,17 @@ A developer portfolio website showcasing projects, skills, and experience. Built
 - **Interactive animations** - Perlin noise wave background with mouse interaction
 - **Responsive design** - Works seamlessly on desktop and mobile
 - **Accessible** - Skip links, keyboard navigation, reduced motion support
-- **Contact form** - Serverless-backed form with rate limiting
+- **Contact form** - Cloudflare Worker proxy to Formspree
 
 ## Tech Stack
 
 - **Frontend**: React 19, TypeScript
-- **Styling**: Tailwind CSS v4, CSS Modules
+- **Styling**: Tailwind CSS v4
 - **Icons**: Lucide React
-- **Backend**: Cloudflare Workers (serverless functions)
-- **Deployment**: Cloudflare Pages
+- **Backend**: Cloudflare Workers (serverless)
+- **Deployment**: Cloudflare Workers with Assets
 - **Testing**: Vitest, React Testing Library
-- **Linting**: ESLint, Prettier
-- **Pre-commit**: Husky, lint-staged
+- **Linting**: ESLint
 
 ## Getting Started
 
@@ -91,21 +90,52 @@ src/
 │   ├── constants.ts    # Magic numbers and config values
 │   ├── github-api.ts   # GitHub API utilities with Zod validation
 │   └── icons.ts        # Icon mapping
+├── worker.ts           # Cloudflare Worker handler
 └── test/               # Test setup and utilities
 
-functions/              # Cloudflare Workers serverless functions
-public/                 # Static assets
+public/                 # Static assets (favicon, sitemap, robots.txt)
 ```
 
 ## Deployment
 
-The site deploys automatically to Cloudflare Pages on push to main.
-
-### Manual Deployment
+### Cloudflare Workers
 
 ```bash
+# Deploy to Cloudflare Workers
 npm run deploy
 ```
+
+This deploys the Worker (handles `/contact` endpoint) and serves static assets.
+
+### Custom Domain
+
+The site uses `martimmendes.dev` as the custom domain. Configure in Cloudflare Dashboard under Workers & Pages → portfolio → Custom Domains.
+
+## SEO Setup
+
+### Google Search Console
+
+1. Go to [Google Search Console](https://search.google.com/search-console)
+2. Add your domain (`martimmendes.dev`)
+3. Verify ownership (usually automatic via Cloudflare)
+4. Submit your sitemap at `https://martimmendes.dev/sitemap.xml`
+
+### Sitemap
+
+The site includes an auto-generated sitemap at `/sitemap.xml` listing the main pages for search engines to crawl.
+
+### Robots.txt
+
+Included at `/robots.txt` to guide search engine crawlers.
+
+### Open Graph & Social
+
+The site includes meta tags for:
+- Open Graph (Facebook, LinkedIn)
+- Twitter Cards
+- Standard SEO meta tags
+
+To update the social preview image, replace `public/og-image.png` (recommended: 1200x630px).
 
 ## License
 
