@@ -1,0 +1,50 @@
+export const LAYOUT = {
+  SIDEBAR_WIDTH: "190px",
+  MAX_CONTENT_WIDTH: "2xl",
+  CARD_HEIGHT: "160px",
+  PAGINATION_ITEMS_PER_PAGE: 6,
+  ANIMATION_DELAY_MS: 60,
+  ANIMATION_DELETE_MS: 35,
+  TYPING_PAUSE_MS: 2000,
+  TYPING_START_DELAY_MS: 100,
+  WAVES_POINT_SPACING_X: 10,
+  WAVES_POINT_SPACING_Y: 32,
+} as const;
+
+export const COLORS = {
+  BACKGROUND_PRIMARY: "rgba(10, 8, 22, 0.55)",
+  BACKGROUND_SECONDARY: "rgba(8, 6, 18, 0.8)",
+  BACKGROUND_TERTIARY: "rgba(8, 6, 18, 0.7)",
+  BORDER_COLOR: "rgba(255, 255, 255, 0.07)",
+  BORDER_COLOR_LIGHT: "rgba(255, 255, 255, 0.05)",
+  BORDER_COLOR_MEDIUM: "rgba(255, 255, 255, 0.08)",
+  TEXT_PRIMARY: "rgba(255, 255, 255, 0.75)",
+  TEXT_SECONDARY: "rgba(255, 255, 255, 0.5)",
+  TEXT_MUTED: "rgba(192, 132, 252, 0.9)",
+  ACCENT_PURPLE: "rgba(168, 85, 247, 0.9)",
+  ACCENT_PURPLE_LIGHT: "rgba(168, 85, 247, 0.6)",
+  ACCENT_PURPLE_DARK: "rgba(168, 85, 247, 0.15)",
+  ACCENT_BLUE: "rgba(59, 130, 246, 0.4)",
+  CARD_BACKGROUND: "rgba(255, 255, 255, 0.03)",
+} as const;
+
+export const WAVES_CONFIG = {
+  DEFAULT_LINE_COLOR: "rgba(168, 85, 247, 0.2)",
+  DEFAULT_WAVE_SPEED_X: 0.0125,
+  DEFAULT_WAVE_SPEED_Y: 0.005,
+  DEFAULT_WAVE_AMP_X: 32,
+  DEFAULT_WAVE_AMP_Y: 16,
+  DEFAULT_FRICTION: 0.925,
+  DEFAULT_TENSION: 0.005,
+  DEFAULT_MAX_CURSOR_MOVE: 100,
+} as const;
+
+export const GITHUB = {
+  USER: "MartimMendesIPL",
+  CACHE_KEY: "portfolio:github_repos:MartimMendesIPL:v1",
+  CACHE_TTL_MS: 1000 * 60 * 60 * 6,
+} as const;
+
+export const ACCESSIBILITY = {
+  REDUCED_MOTION_MEDIA_QUERY: "(prefers-reduced-motion: reduce)",
+} as const;

@@ -1,73 +1,112 @@
-# React + TypeScript + Vite
+# Martim Mendes Portfolio
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A developer portfolio website showcasing projects, skills, and experience. Built with React, TypeScript, and Tailwind CSS, deployed on Cloudflare Pages.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **IDE-like interface** - Editor-inspired UI with file tree navigation
+- **Dynamic project showcase** - Fetches and displays GitHub repositories in real-time
+- **Interactive animations** - Perlin noise wave background with mouse interaction
+- **Responsive design** - Works seamlessly on desktop and mobile
+- **Accessible** - Skip links, keyboard navigation, reduced motion support
+- **Contact form** - Serverless-backed form with rate limiting
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Frontend**: React 19, TypeScript
+- **Styling**: Tailwind CSS v4, CSS Modules
+- **Icons**: Lucide React
+- **Backend**: Cloudflare Workers (serverless functions)
+- **Deployment**: Cloudflare Pages
+- **Testing**: Vitest, React Testing Library
+- **Linting**: ESLint, Prettier
+- **Pre-commit**: Husky, lint-staged
 
-## Expanding the ESLint configuration
+## Getting Started
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Prerequisites
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- Node.js 18+
+- npm or pnpm
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### Installation
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+# Clone the repository
+git clone https://github.com/MartimMendesIPL/portfolio.git
+cd portfolio
+
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Environment Variables
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Copy `.env.example` to `.env` and configure:
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+cp .env.example .env
 ```
+
+| Variable            | Description                                                          |
+| ------------------- | -------------------------------------------------------------------- |
+| `VITE_GITHUB_TOKEN` | GitHub personal access token for increased API rate limit (optional) |
+
+### Building
+
+```bash
+# Build for production
+npm run build
+
+# Preview production build locally
+npm run preview
+```
+
+### Testing
+
+```bash
+# Run tests once
+npm test
+
+# Run tests in watch mode
+npm run test:watch
+
+# Generate coverage report
+npm run test:coverage
+```
+
+## Project Structure
+
+```
+src/
+├── components/          # React components
+│   ├── about/          # About section components
+│   ├── contact/        # Contact section components
+│   └── projects/       # Projects section components
+├── hooks/              # Custom React hooks
+├── lib/                # Utilities and constants
+│   ├── constants.ts    # Magic numbers and config values
+│   ├── github-api.ts   # GitHub API utilities with Zod validation
+│   └── icons.ts        # Icon mapping
+└── test/               # Test setup and utilities
+
+functions/              # Cloudflare Workers serverless functions
+public/                 # Static assets
+```
+
+## Deployment
+
+The site deploys automatically to Cloudflare Pages on push to main.
+
+### Manual Deployment
+
+```bash
+npm run deploy
+```
+
+## License
+
+MIT
