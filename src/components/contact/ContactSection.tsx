@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import FileTree, { type TreeNode } from "../FileTree";
 import EditorPanel, { type Tab } from "../EditorPanel";
 
@@ -100,6 +100,18 @@ const ContactSection = () => {
   ]);
   const [activeTab, setActiveTab] = useState<string>("send_a_message");
   const [showSidebar, setShowSidebar] = useState(false);
+  const [formKey, setFormKey] = useState(0);
+
+  useEffect(() => {
+    if (status === "sent") {
+      const timer = setTimeout(() => setFormKey((k) => k + 1), 300);
+      return () => clearTimeout(timer);
+    }
+  }, [status]);
+
+  const handleSendAnother = () => {
+    setStatus("idle");
+  };
 
   const contactTree: TreeNode[] = [
     {
@@ -272,7 +284,30 @@ const ContactSection = () => {
                 <div className="w-full max-w-2xl px-4 sm:px-8 md:px-14 py-6 sm:py-12">
                   {status === "sent" ? (
                     /* Success state */
-                    <div className="flex flex-col items-center gap-5 text-center px-6">
+                    <div
+                      key="success"
+                      className="flex flex-col items-center gap-5 text-center px-6 animate-success"
+                      style={{
+                        animation: "successFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+                      }}
+                    >
+                      <style>
+                        {`
+                          @keyframes successFadeIn {
+                            0% { opacity: 0; transform: scale(0.9) translateY(10px); }
+                            100% { opacity: 1; transform: scale(1) translateY(0); }
+                          }
+                          @keyframes checkDraw {
+                            0% { stroke-dashoffset: 24; }
+                            100% { stroke-dashoffset: 0; }
+                          }
+                          .check-icon {
+                            stroke-dasharray: 24;
+                            stroke-dashoffset: 24;
+                            animation: checkDraw 0.3s ease-out 0.2s forwards;
+                          }
+                        `}
+                      </style>
                       <div
                         className="w-16 h-16 rounded-none flex items-center justify-center"
                         style={{
@@ -290,7 +325,7 @@ const ContactSection = () => {
                           strokeLinecap="round"
                           strokeLinejoin="round"
                         >
-                          <polyline points="20 6 9 17 4 12" />
+                          <polyline className="check-icon" points="20 6 9 17 4 12" />
                         </svg>
                       </div>
                       <p className="text-base font-mono text-gray-100">
@@ -300,8 +335,9 @@ const ContactSection = () => {
                         {"// I'll get back to you soon"}
                       </p>
                       <button
-                        onClick={() => setStatus("idle")}
-                        className="mt-2 text-sm font-mono text-purple-400 hover:text-purple-300 transition-colors"
+                        onClick={handleSendAnother}
+                        className="mt-2 text-sm font-mono text-purple-400 hover:text-purple-300 transition-colors hover:translate-x-1"
+                        style={{ transition: "all 0.2s ease-out" }}
                       >
                         send another →
                       </button>
@@ -309,9 +345,24 @@ const ContactSection = () => {
                   ) : (
                     /* Form */
                     <form
+                      key={formKey}
                       onSubmit={handleSubmit}
-                      className="flex flex-col gap-5 w-full"
+                      className="flex flex-col gap-5 w-full animate-form-fade"
+                      style={{
+                        animation: "formFadeIn 0.3s ease-out forwards",
+                      }}
                     >
+                      <style>
+                        {`
+                          @keyframes formFadeIn {
+                            0% { opacity: 0; transform: translateY(5px); }
+                            100% { opacity: 1; transform: translateY(0); }
+                          }
+                          .animate-form-fade {
+                            animation: formFadeIn 0.3s ease-out forwards;
+                          }
+                        `}
+                      </style>
                       {/* Header comment */}
                       <div className="mb-2">
                         <p className="text-base font-mono text-gray-500">
